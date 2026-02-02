@@ -1,0 +1,22 @@
+{
+  "name": "patchin",
+  "private": true,
+  "packageManager": "yarn@4.12.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "db:generate": "yarn workspace @patchin/db generate",
+    "db:migrate": "yarn workspace @patchin/db migrate",
+    "db:push": "yarn workspace @patchin/db push",
+    "db:studio": "yarn workspace @patchin/db studio"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.4"
+  }
+}
