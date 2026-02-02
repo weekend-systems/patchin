@@ -95,3 +95,16 @@ export const apiUsage = pgTable("api_usage", {
   statusCode: integer("status_code"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+// Device authorization for agent-initiated auth flow
+export const deviceAuthorization = pgTable("device_authorization", {
+  id: text("id").primaryKey(),
+  deviceCodeHash: text("device_code_hash").notNull().unique(),
+  deviceCodePrefix: text("device_code_prefix").notNull(),
+  userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
+  apiKeyId: text("api_key_id").references(() => apiKey.id, { onDelete: "set null" }),
+  status: text("status").notNull().default("pending"), // pending | completed | expired
+  apiKeyEncrypted: text("api_key_encrypted"), // Temporarily stores encrypted key for agent retrieval
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});

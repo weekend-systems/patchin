@@ -113,11 +113,22 @@ export async function GET(
       });
     }
 
-    // Clear state cookie and redirect
-    const response = NextResponse.redirect(
-      `${baseUrl}/dashboard?connected=${provider}`
-    );
+    // Check for custom redirect (from setup flow)
+    const customRedirect = request.cookies.get(`oauth_redirect_${provider}`)?.value;
+
+    let redirectUrl: string;
+    if (customRedirect) {
+      // Redirect back to the custom location (e.g., setup page)
+      const separator = customRedirect.includes("?") ? "&" : "?";
+      redirectUrl = `${baseUrl}${customRedirect}${separator}connected=${provider}`;
+    } else {
+      redirectUrl = `${baseUrl}/dashboard?connected=${provider}`;
+    }
+
+    // Clear cookies and redirect
+    const response = NextResponse.redirect(redirectUrl);
     response.cookies.delete(`oauth_state_${provider}`);
+    response.cookies.delete(`oauth_redirect_${provider}`);
     return response;
   } catch (err) {
     console.error("OAuth callback error:", err);

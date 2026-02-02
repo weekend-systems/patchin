@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signUp } from "@/lib/auth-client";
 
-export default function SignupPage() {
+function SignupForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +30,7 @@ export default function SignupPage() {
       if (result.error) {
         setError(result.error.message || "Signup failed");
       } else {
-        router.push("/dashboard");
+        router.push(redirect || "/dashboard");
       }
     } catch {
       setError("An unexpected error occurred");
@@ -36,6 +38,8 @@ export default function SignupPage() {
       setLoading(false);
     }
   }
+
+  const loginHref = redirect ? `/login?redirect=${encodeURIComponent(redirect)}` : "/login";
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black p-8">
@@ -103,11 +107,25 @@ export default function SignupPage() {
 
         <p className="text-center mt-6 text-zinc-600 dark:text-zinc-400">
           Already have an account?{" "}
-          <Link href="/login" className="text-zinc-900 dark:text-white font-medium hover:underline">
+          <Link href={loginHref} className="text-zinc-900 dark:text-white font-medium hover:underline">
             Log in
           </Link>
         </p>
       </div>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
+          <p className="text-zinc-500">Loading...</p>
+        </div>
+      }
+    >
+      <SignupForm />
+    </Suspense>
   );
 }

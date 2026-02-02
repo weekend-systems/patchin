@@ -55,3 +55,10 @@ export function generateApiKey(): { key: string; prefix: string; hash: string } 
   const hash = hashApiKey(key);
   return { key, prefix, hash };
 }
+
+export function generateDeviceCode(): { code: string; prefix: string; hash: string } {
+  const code = `dc_${randomBytes(24).toString("base64url")}`;
+  const prefix = code.slice(0, 10);
+  const hash = createHash("sha256").update(code).digest("hex");
+  return { code, prefix, hash };
+}

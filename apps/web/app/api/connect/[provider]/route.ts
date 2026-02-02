@@ -9,6 +9,8 @@ export async function GET(
   { params }: { params: Promise<{ provider: string }> }
 ) {
   const { provider } = await params;
+  const searchParams = request.nextUrl.searchParams;
+  const customRedirect = searchParams.get("redirect");
 
   // Validate provider
   if (!Object.keys(oauthProviders).includes(provider)) {
@@ -39,6 +41,16 @@ export async function GET(
     sameSite: "lax",
     maxAge: 600, // 10 minutes
   });
+
+  // Store custom redirect if provided (for setup flow)
+  if (customRedirect) {
+    response.cookies.set(`oauth_redirect_${provider}`, customRedirect, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 600, // 10 minutes
+    });
+  }
 
   return response;
 }
