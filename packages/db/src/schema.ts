@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, boolean, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, integer, bigint } from "drizzle-orm/pg-core";
 
 // Better Auth required tables
 export const user = pgTable("user", {
@@ -108,4 +108,18 @@ export const deviceAuthorization = pgTable("device_authorization", {
   apiKeyEncrypted: text("api_key_encrypted"), // Temporarily stores encrypted key for agent retrieval
   expiresAt: timestamp("expires_at").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// GitHub App installations
+export const githubInstallation = pgTable("github_installation", {
+  id: text("id").primaryKey(),
+  installationId: bigint("installation_id", { mode: "number" }).notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  accountLogin: text("account_login").notNull(), // GitHub username or org name
+  accountType: text("account_type").notNull(), // "User" or "Organization"
+  repositorySelection: text("repository_selection").notNull(), // "all" or "selected"
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

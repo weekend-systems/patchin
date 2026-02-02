@@ -31,6 +31,14 @@ type ApiKey = {
   createdAt: string;
 };
 
+type GitHubInstallation = {
+  id: string;
+  installationId: number;
+  accountLogin: string;
+  accountType: string;
+  repositorySelection: string;
+};
+
 const ProviderIcons: Record<string, React.ReactNode> = {
   google: <SiGoogle className="w-5 h-5" />,
   microsoft: <FaMicrosoft className="w-5 h-5 text-[#00A4EF]" />,
@@ -64,6 +72,7 @@ function DashboardContent() {
   const [accounts, setAccounts] = useState<ConnectedAccount[]>([]);
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
   const [providerStatus, setProviderStatus] = useState<ProviderStatus>({});
+  const [githubInstallations, setGithubInstallations] = useState<GitHubInstallation[]>([]);
   const [newKeyName, setNewKeyName] = useState("");
   const [newKey, setNewKey] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -86,10 +95,11 @@ function DashboardContent() {
   async function fetchData() {
     setLoading(true);
     try {
-      const [accountsRes, keysRes, providersRes] = await Promise.all([
+      const [accountsRes, keysRes, providersRes, installationsRes] = await Promise.all([
         fetch("/api/accounts"),
         fetch("/api/keys"),
         fetch("/api/providers"),
+        fetch("/api/github/installations"),
       ]);
       if (accountsRes.ok) {
         const data = await accountsRes.json();
@@ -102,6 +112,10 @@ function DashboardContent() {
       if (providersRes.ok) {
         const data = await providersRes.json();
         setProviderStatus(data.providers || {});
+      }
+      if (installationsRes.ok) {
+        const data = await installationsRes.json();
+        setGithubInstallations(data.installations || []);
       }
     } catch (err) {
       console.error("Failed to fetch data:", err);
@@ -214,6 +228,9 @@ function DashboardContent() {
             {PROVIDERS.map((provider) => {
               const providerAccounts = accounts.filter((a) => a.provider === provider.id);
               const isConfigured = providerStatus[provider.id] !== false;
+              const isGitHub = provider.id === "github";
+              const hasGitHubAccount = isGitHub && providerAccounts.length > 0;
+              const hasGitHubInstallation = isGitHub && githubInstallations.length > 0;
               return (
                 <div
                   key={provider.id}
@@ -283,6 +300,46 @@ function DashboardContent() {
                           </div>
                         </div>
                       ))}
+                    </div>
+                  )}
+                  {/* GitHub-specific: Installation status */}
+                  {isGitHub && hasGitHubAccount && (
+                    <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
+                      {hasGitHubInstallation ? (
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                              {githubInstallations.length} installation{githubInstallations.length !== 1 ? "s" : ""}
+                            </span>
+                            <span className="px-2 py-0.5 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded">
+                              App installed
+                            </span>
+                          </div>
+                          <a
+                            href="/github/install"
+                            className="px-3 py-1 text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+                          >
+                            Manage installations
+                          </a>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="px-2 py-0.5 text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 rounded">
+                              App not installed
+                            </span>
+                            <span className="text-sm text-zinc-500">
+                              Install to enable repo access
+                            </span>
+                          </div>
+                          <a
+                            href="/github/install"
+                            className="px-3 py-1 text-sm bg-zinc-900 text-white rounded hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+                          >
+                            Install App
+                          </a>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

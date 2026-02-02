@@ -136,6 +136,9 @@ export async function GET(
       // Redirect back to the custom location (e.g., setup page)
       const separator = customRedirect.includes("?") ? "&" : "?";
       redirectUrl = `${baseUrl}${customRedirect}${separator}connected=${provider}`;
+    } else if (provider === "github") {
+      // For GitHub, redirect to installation page to prompt app installation
+      redirectUrl = `${baseUrl}/github/install`;
     } else {
       redirectUrl = `${baseUrl}/dashboard?connected=${provider}`;
     }
