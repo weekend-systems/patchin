@@ -68,6 +68,10 @@ jobs:
           path: binaries
           merge-multiple: true
 
+      - name: Generate checksums
+        run: |
+          sha256sum binaries/* > binaries/checksums.txt
+
       - name: Get version
         id: version
         run: |
