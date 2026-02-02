@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { db, apiKey, connectedAccount } from "@/lib/db";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { hashApiKey, decryptToken, encryptToken } from "@/lib/crypto";
 import { refreshAccessToken, OAuthProvider } from "@/lib/oauth-providers";
 
@@ -56,10 +56,15 @@ export async function getAccessToken(
   const accounts = await db
     .select()
     .from(connectedAccount)
-    .where(eq(connectedAccount.userId, userId))
+    .where(
+      and(
+        eq(connectedAccount.userId, userId),
+        eq(connectedAccount.provider, provider)
+      )
+    )
     .limit(1);
 
-  const account = accounts.find((a) => a.provider === provider);
+  const account = accounts[0];
 
   if (!account) {
     return { error: `No ${provider} account connected` };
