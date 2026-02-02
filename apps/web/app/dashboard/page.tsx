@@ -32,12 +32,15 @@ const PROVIDERS = [
   { id: "spotify", name: "Spotify", description: "Playlists, playback" },
 ];
 
+type ProviderStatus = Record<string, boolean>;
+
 function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session, isPending } = useSession();
   const [accounts, setAccounts] = useState<ConnectedAccount[]>([]);
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
+  const [providerStatus, setProviderStatus] = useState<ProviderStatus>({});
   const [newKeyName, setNewKeyName] = useState("");
   const [newKey, setNewKey] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -60,9 +63,10 @@ function DashboardContent() {
   async function fetchData() {
     setLoading(true);
     try {
-      const [accountsRes, keysRes] = await Promise.all([
+      const [accountsRes, keysRes, providersRes] = await Promise.all([
         fetch("/api/accounts"),
         fetch("/api/keys"),
+        fetch("/api/providers"),
       ]);
       if (accountsRes.ok) {
         const data = await accountsRes.json();
@@ -71,6 +75,10 @@ function DashboardContent() {
       if (keysRes.ok) {
         const data = await keysRes.json();
         setApiKeys(data.keys || []);
+      }
+      if (providersRes.ok) {
+        const data = await providersRes.json();
+        setProviderStatus(data.providers || {});
       }
     } catch (err) {
       console.error("Failed to fetch data:", err);
@@ -182,21 +190,35 @@ function DashboardContent() {
           <div className="grid gap-6">
             {PROVIDERS.map((provider) => {
               const providerAccounts = accounts.filter((a) => a.provider === provider.id);
+              const isConfigured = providerStatus[provider.id] !== false;
               return (
                 <div
                   key={provider.id}
                   className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden"
                 >
                   <div className="flex items-center justify-between p-4 bg-zinc-50 dark:bg-zinc-900">
-                    <h3 className="font-medium text-zinc-900 dark:text-white">
-                      {provider.name}
-                    </h3>
-                    <a
-                      href={`/api/connect/${provider.id}`}
-                      className="px-3 py-1 text-sm bg-zinc-900 text-white rounded hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
-                    >
-                      + Add account
-                    </a>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-medium text-zinc-900 dark:text-white">
+                        {provider.name}
+                      </h3>
+                      {!isConfigured && (
+                        <span className="px-2 py-0.5 text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 rounded">
+                          Coming soon
+                        </span>
+                      )}
+                    </div>
+                    {isConfigured ? (
+                      <a
+                        href={`/api/connect/${provider.id}`}
+                        className="px-3 py-1 text-sm bg-zinc-900 text-white rounded hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+                      >
+                        + Add account
+                      </a>
+                    ) : (
+                      <span className="px-3 py-1 text-sm text-zinc-400 dark:text-zinc-600 cursor-not-allowed">
+                        + Add account
+                      </span>
+                    )}
                   </div>
                   {providerAccounts.length === 0 ? (
                     <div className="p-4">
