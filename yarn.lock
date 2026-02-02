@@ -1160,6 +1160,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@patchin/cli@workspace:packages/cli":
+  version: 0.0.0-use.local
+  resolution: "@patchin/cli@workspace:packages/cli"
+  dependencies:
+    "@types/node": "npm:^20"
+    commander: "npm:^12.0.0"
+    typescript: "npm:^5"
+  bin:
+    patchin: ./dist/bin/patchin.js
+  languageName: unknown
+  linkType: soft
+
 "@patchin/db@workspace:*, @patchin/db@workspace:packages/db":
   version: 0.0.0-use.local
   resolution: "@patchin/db@workspace:packages/db"
@@ -2257,6 +2269,13 @@ __metadata:
   version: 1.1.4
   resolution: "color-name@npm:1.1.4"
   checksum: 10c0/a1a3f914156960902f46f7f56bc62effc6c94e84b2cae157a526b1c1f74b677a47ec602bf68a61abfa2b42d15b7c5651c6dbe72a43af720bc588dff885b10f95
+  languageName: node
+  linkType: hard
+
+"commander@npm:^12.0.0":
+  version: 12.1.0
+  resolution: "commander@npm:12.1.0"
+  checksum: 10c0/6e1996680c083b3b897bfc1cfe1c58dfbcd9842fd43e1aaf8a795fbc237f65efcc860a3ef457b318e73f29a4f4a28f6403c3d653d021d960e4632dd45bde54a9
   languageName: node
   linkType: hard
 
