@@ -160,74 +160,141 @@ Your data lives in dozens of services. Agents need access to that data to be use
 
 ## Integrations
 
-### Tier 1 — Launch
-High demand, core productivity tools.
+| Service | What you get | Status |
+|---------|--------------|--------|
+| Google | Gmail, Calendar, Drive | Live |
+| Microsoft | Outlook, OneDrive | Live |
+| GitHub | Repos, issues, PRs, gists | Live |
+| Slack | Messages, channels | Live |
+| Notion | Pages, databases | Live |
+| Linear | Issues, projects | Live |
+| YouTube | Playlists, subscriptions | Live |
+| Strava | Activities, stats | Live |
+| Spotify | Playlists, playback | Live |
 
-| Service | Scopes | Status |
-|---------|--------|--------|
-| Google Calendar | Read/write events | Planned |
-| Gmail | Send, receive, manage | Planned |
-| Google Drive | Files and folders | Planned |
-| Google Docs | Create, read, edit | Planned |
-| Google Sheets | Read/write data | Planned |
-| Notion | Workspaces and pages | Planned |
-| Linear | Issues, comments, projects | Planned |
-| Slack | Messages, channels | Planned |
-| GitHub | Repos, issues, PRs | Planned |
-
-### Tier 2 — Fast Follows
-Common in teams, frequent requests.
-
-| Service | Scopes | Status |
-|---------|--------|--------|
-| Outlook | Email, calendar | Planned |
-| OneDrive | Files and folders | Planned |
-| Jira | Issues, projects | Planned |
-| Asana | Tasks, projects | Planned |
-| HubSpot | CRM, contacts, deals | Planned |
-| Confluence | Spaces, content | Planned |
-
-### Tier 3 — Nice to Have
-Lower priority, add based on demand.
-
-| Service | Scopes | Status |
-|---------|--------|--------|
-| Stripe | Payments, customers | Planned |
-| Discord | Guilds, messages | Planned |
-| Dropbox | Files, folders | Planned |
-| Box | Files, folders | Planned |
-| Todoist | Tasks, projects | Planned |
-| Zendesk | Tickets, users | Planned |
-| Twilio | SMS, voice | Planned |
-| Spotify | Playlists, playback | Planned |
+**Coming soon:** Jira, Asana, HubSpot, Discord, Dropbox, Todoist
 
 ## Roadmap
 
 ### Phase 1: Core
-- [ ] OAuth flow UI
-- [ ] Token vault (encrypted storage, refresh handling)
-- [ ] CLI for local MCP serving
-- [ ] Tier 1 integrations (Google suite, Notion, Linear, Slack, GitHub)
+- [x] OAuth flow UI
+- [x] Token vault (encrypted storage, refresh handling)
+- [x] CLI for API access
+- [x] Core integrations (Google, Microsoft, GitHub, Slack, Notion, Linear, Spotify, Strava, YouTube)
+- [x] Multi-account support per provider
+- [x] Device authorization flow for agents
 
 ### Phase 2: Scale
-- [ ] Tier 2 integrations
+- [ ] More integrations based on demand
 - [ ] Team accounts
 - [ ] Analytics: which agents are using what
 
 ### Phase 3: Enterprise
-- [ ] Tier 3 integrations based on demand
 - [ ] Audit logs
 - [ ] SSO
 - [ ] Compliance features
 
 ## Tech Stack
 
-TBD — likely:
-- **Frontend:** Next.js
-- **Backend:** Node.js or Python
-- **Auth:** Standard OAuth 2.0 flows
-- **Storage:** Encrypted token vault (Postgres + encryption at rest)
-- **MCP:** TypeScript MCP SDK
+- **Frontend:** Next.js 16 (App Router)
+- **Backend:** Next.js API routes
+- **Auth:** Better Auth + standard OAuth 2.0 flows
+- **Database:** PostgreSQL with Drizzle ORM
+- **Encryption:** AES-256-GCM for token storage
+- **Hosting:** Fly.io
+
+## Local Development
+
+### Prerequisites
+
+- Node.js 20+
+- PostgreSQL database
+- Yarn 4
+
+### Setup
+
+```bash
+# Install dependencies
+yarn install
+
+# Set up environment variables
+cp apps/web/.env.example apps/web/.env.local
+# Edit .env.local with your values
+
+# Run database migrations
+cd packages/db && npx drizzle-kit push
+
+# Start development server
+yarn dev
+```
+
+### Environment Variables
+
+**Required:**
+
+```bash
+# Database
+DATABASE_URL=postgresql://user:pass@localhost:5432/patchin
+
+# Auth
+BETTER_AUTH_SECRET=random-32-char-string
+BETTER_AUTH_URL=http://localhost:3000
+
+# Token encryption (32 bytes hex = 64 chars)
+TOKEN_ENCRYPTION_KEY=your-64-char-hex-string
+```
+
+**OAuth Providers** (add as needed):
+
+```bash
+# Google (also used for YouTube)
+GOOGLE_CLIENT_ID=xxx
+GOOGLE_CLIENT_SECRET=xxx
+
+# Microsoft
+MICROSOFT_CLIENT_ID=xxx
+MICROSOFT_CLIENT_SECRET=xxx
+
+# GitHub
+GITHUB_CLIENT_ID=xxx
+GITHUB_CLIENT_SECRET=xxx
+
+# Slack
+SLACK_CLIENT_ID=xxx
+SLACK_CLIENT_SECRET=xxx
+
+# Notion
+NOTION_CLIENT_ID=xxx
+NOTION_CLIENT_SECRET=xxx
+
+# Linear
+LINEAR_CLIENT_ID=xxx
+LINEAR_CLIENT_SECRET=xxx
+
+# Strava
+STRAVA_CLIENT_ID=xxx
+STRAVA_CLIENT_SECRET=xxx
+
+# Spotify
+SPOTIFY_CLIENT_ID=xxx
+SPOTIFY_CLIENT_SECRET=xxx
+```
+
+### OAuth Callback URLs
+
+When setting up OAuth apps, use these callback URLs:
+
+| Provider | Callback URL |
+|----------|-------------|
+| Google | `http://localhost:3000/api/connect/google/callback` |
+| Microsoft | `http://localhost:3000/api/connect/microsoft/callback` |
+| GitHub | `http://localhost:3000/api/connect/github/callback` |
+| Slack | `http://localhost:3000/api/connect/slack/callback` |
+| Notion | `http://localhost:3000/api/connect/notion/callback` |
+| Linear | `http://localhost:3000/api/connect/linear/callback` |
+| YouTube | `http://localhost:3000/api/connect/youtube/callback` |
+| Strava | `http://localhost:3000/api/connect/strava/callback` |
+| Spotify | `http://localhost:3000/api/connect/spotify/callback` |
 
 ## Contributing
 
