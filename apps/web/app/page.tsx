@@ -53,6 +53,16 @@ export default function Home() {
                   See How It Works
                 </Link>
               </div>
+              <div className="mt-8 p-4 border border-[var(--border-color)] bg-[var(--bg-tertiary)]">
+                <p className="text-sm text-[var(--text-secondary)]">
+                  <span className="font-semibold text-[var(--text-primary)]">Quick setup:</span>{" "}
+                  Ask your AI to read{" "}
+                  <code className="px-1.5 py-0.5 bg-[var(--bg-secondary)] text-[var(--accent-rust)] font-mono text-xs">
+                    https://patchin.sh/skill.md
+                  </code>{" "}
+                  to get started
+                </p>
+              </div>
             </div>
             <div className="relative">
               {/* Visual representation of connected services */}
@@ -172,10 +182,13 @@ export default function Home() {
             <div className="card-sharp p-6 bg-[var(--bg-tertiary)]">
               <div className="font-mono text-sm space-y-4 text-[var(--text-secondary)]">
                 <div>
-                  <span className="text-[var(--text-muted)]"># Install</span>
+                  <span className="text-[var(--text-muted)]"># Install (no dependencies required)</span>
                 </div>
-                <div>
-                  <span className="text-[var(--accent-sage)]">$</span> npm install -g @patchin/cli
+                <div className="break-all">
+                  <span className="text-[var(--accent-sage)]">$</span> curl -fsSL https://patchin.sh/install.sh | bash
+                </div>
+                <div className="pt-2 text-xs text-[var(--text-muted)]">
+                  # or with npm: npm install -g @patchin/cli
                 </div>
                 <div className="pt-4">
                   <span className="text-[var(--text-muted)]"># Login (user completes in browser)</span>
@@ -242,28 +255,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Claude Code Skill */}
-          <div className="mt-16 card-sharp p-8 max-w-2xl mx-auto">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-[var(--accent-rust)] flex items-center justify-center flex-shrink-0">
-                <span className="text-white text-xl">⚡</span>
-              </div>
-              <div>
-                <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold mb-2">
-                  Claude Code Skill
-                </h3>
-                <p className="text-[var(--text-secondary)] mb-4">
-                  Add the Patchin skill to teach Claude how to access your connected services:
-                </p>
-                <div className="card-sharp p-4 bg-[var(--bg-tertiary)] font-mono text-sm">
-                  <span className="text-[var(--text-muted)]">~/.claude/settings.json</span>
-                  <pre className="mt-2 text-[var(--text-secondary)]">{`{
-  "skills": ["https://patchin.sh/skill.md"]
-}`}</pre>
-                </div>
-              </div>
-            </div>
-          </div>
         </section>
 
         <div className="divider-plaid mx-8" />
@@ -405,8 +396,14 @@ export default function Home() {
             <Link href="https://github.com/jackweatherilt/patchin" className="hover:text-[var(--accent-rust)] transition-colors">
               GitHub
             </Link>
-            <Link href="https://twitter.com/patchinsh" className="hover:text-[var(--accent-rust)] transition-colors">
+            <Link href="https://twitter.com/jackw_xyz" className="hover:text-[var(--accent-rust)] transition-colors">
               Twitter
+            </Link>
+            <Link href="/privacy" className="hover:text-[var(--accent-rust)] transition-colors">
+              Privacy
+            </Link>
+            <Link href="/terms" className="hover:text-[var(--accent-rust)] transition-colors">
+              Terms
             </Link>
             <Link href="mailto:jack@patchin.sh" className="hover:text-[var(--accent-rust)] transition-colors">
               Contact
