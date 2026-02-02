@@ -175,7 +175,7 @@ export default function Home() {
                   <span className="text-[var(--text-muted)]"># Start the auth flow</span>
                 </div>
                 <div>
-                  <span className="text-[var(--accent-sage)]">$</span> curl -X POST patchin.sh/api/auth/device
+                  <span className="text-[var(--accent-sage)]">$</span> curl -X POST https://patchin.sh/api/auth/device
                 </div>
                 <div className="pl-4 text-[var(--text-muted)]">
                   {`{ "device_code": "dc_...", "verification_url": "..." }`}
@@ -187,7 +187,7 @@ export default function Home() {
                   <span className="text-[var(--text-muted)]"># Poll for completion</span>
                 </div>
                 <div>
-                  <span className="text-[var(--accent-sage)]">$</span> curl -X POST patchin.sh/api/auth/device/token
+                  <span className="text-[var(--accent-sage)]">$</span> curl -X POST https://patchin.sh/api/auth/device/token
                 </div>
                 <div className="pl-4 text-[var(--text-muted)]">
                   {`{ "status": "completed", "api_key": "pk_live_..." }`}
