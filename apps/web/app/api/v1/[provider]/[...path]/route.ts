@@ -28,9 +28,11 @@ async function handleRequest(
   }
 
   // Get access token for provider
+  const accountHint = request.headers.get("x-patchin-account") || undefined;
   const tokenResult = await getAccessToken(
     authResult.userId!,
-    provider as OAuthProvider
+    provider as OAuthProvider,
+    accountHint
   );
   if ("error" in tokenResult) {
     return NextResponse.json({ error: tokenResult.error }, { status: 403 });

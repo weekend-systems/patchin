@@ -2,8 +2,10 @@ import { getApiKey, getBaseUrl } from "../config.js";
 import { notAuthenticated, networkError, apiError } from "../errors.js";
 
 interface Account {
+  id: string;
   provider: string;
   providerEmail: string | null;
+  isDefault: boolean;
   createdAt: string;
 }
 

@@ -8,6 +8,7 @@ type ConnectedAccount = {
   id: string;
   provider: string;
   providerEmail: string | null;
+  isDefault: boolean;
   createdAt: string;
 };
 
@@ -114,6 +115,21 @@ function DashboardContent() {
     }
   }
 
+  async function setDefaultAccount(id: string) {
+    try {
+      const res = await fetch("/api/accounts", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, isDefault: true }),
+      });
+      if (res.ok) {
+        fetchData();
+      }
+    } catch (err) {
+      console.error("Failed to set default account:", err);
+    }
+  }
+
   if (isPending || !session) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -157,38 +173,65 @@ function DashboardContent() {
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-white mb-4">
             Connected Accounts
           </h2>
-          <div className="grid gap-4">
+          <div className="grid gap-6">
             {PROVIDERS.map((provider) => {
-              const connectedAccount = accounts.find((a) => a.provider === provider.id);
+              const providerAccounts = accounts.filter((a) => a.provider === provider.id);
               return (
                 <div
                   key={provider.id}
-                  className="flex items-center justify-between p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg"
+                  className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden"
                 >
-                  <div>
+                  <div className="flex items-center justify-between p-4 bg-zinc-50 dark:bg-zinc-900">
                     <h3 className="font-medium text-zinc-900 dark:text-white">
                       {provider.name}
                     </h3>
-                    <p className="text-sm text-zinc-500">
-                      {connectedAccount
-                        ? connectedAccount.providerEmail || "Connected"
-                        : provider.description}
-                    </p>
-                  </div>
-                  {connectedAccount ? (
-                    <button
-                      onClick={() => disconnectAccount(connectedAccount.id)}
-                      className="px-4 py-2 text-sm text-red-600 hover:text-red-800 dark:text-red-400"
-                    >
-                      Disconnect
-                    </button>
-                  ) : (
                     <a
                       href={`/api/connect/${provider.id}`}
-                      className="px-4 py-2 text-sm bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+                      className="px-3 py-1 text-sm bg-zinc-900 text-white rounded hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
                     >
-                      Connect
+                      + Add account
                     </a>
+                  </div>
+                  {providerAccounts.length === 0 ? (
+                    <div className="p-4">
+                      <p className="text-sm text-zinc-500">{provider.description}</p>
+                    </div>
+                  ) : (
+                    <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
+                      {providerAccounts.map((account) => (
+                        <div
+                          key={account.id}
+                          className="flex items-center justify-between p-4"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="text-zinc-900 dark:text-white">
+                              {account.providerEmail || "Connected"}
+                            </span>
+                            {account.isDefault && (
+                              <span className="px-2 py-0.5 text-xs bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300 rounded">
+                                default
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {!account.isDefault && (
+                              <button
+                                onClick={() => setDefaultAccount(account.id)}
+                                className="px-3 py-1 text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+                              >
+                                Make default
+                              </button>
+                            )}
+                            <button
+                              onClick={() => disconnectAccount(account.id)}
+                              className="px-3 py-1 text-sm text-red-600 hover:text-red-800 dark:text-red-400"
+                            >
+                              Disconnect
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   )}
                 </div>
               );
@@ -278,8 +321,13 @@ function DashboardContent() {
             Make requests to your connected services through the Patchin proxy:
           </p>
           <pre className="p-4 bg-zinc-200 dark:bg-zinc-800 rounded-lg overflow-x-auto text-sm">
-            <code>{`# Gmail example
+            <code>{`# Gmail example (uses default account)
 curl -H "Authorization: Bearer YOUR_API_KEY" \\
+  https://patchin.sh/api/v1/google/gmail/v1/users/me/messages
+
+# Use a specific account by email
+curl -H "Authorization: Bearer YOUR_API_KEY" \\
+  -H "X-Patchin-Account: work@gmail.com" \\
   https://patchin.sh/api/v1/google/gmail/v1/users/me/messages
 
 # Outlook example

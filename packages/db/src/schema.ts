@@ -66,6 +66,7 @@ export const connectedAccount = pgTable("connected_account", {
   refreshTokenEncrypted: text("refresh_token_encrypted"),
   accessTokenExpiresAt: timestamp("access_token_expires_at"),
   scope: text("scope"),
+  isDefault: boolean("is_default").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

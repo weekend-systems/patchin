@@ -72,20 +72,21 @@ export async function GET(
     // Calculate expiration
     const accessTokenExpiresAt = new Date(Date.now() + tokens.expiresIn * 1000);
 
-    // Check if account already exists
+    // Check if this specific provider account already exists
     const existing = await db
       .select()
       .from(connectedAccount)
       .where(
         and(
           eq(connectedAccount.userId, userId),
-          eq(connectedAccount.provider, provider)
+          eq(connectedAccount.provider, provider),
+          eq(connectedAccount.providerAccountId, userInfo.id)
         )
       )
       .limit(1);
 
     if (existing.length > 0) {
-      // Update existing account
+      // Same provider account - update tokens
       await db
         .update(connectedAccount)
         .set({
@@ -93,12 +94,25 @@ export async function GET(
           refreshTokenEncrypted,
           accessTokenExpiresAt,
           scope: tokens.scope,
-          providerAccountId: userInfo.id,
           providerEmail: userInfo.email,
           updatedAt: new Date(),
         })
         .where(eq(connectedAccount.id, existing[0].id));
     } else {
+      // New provider account - check if first for this provider
+      const existingForProvider = await db
+        .select()
+        .from(connectedAccount)
+        .where(
+          and(
+            eq(connectedAccount.userId, userId),
+            eq(connectedAccount.provider, provider)
+          )
+        )
+        .limit(1);
+
+      const isFirst = existingForProvider.length === 0;
+
       // Create new connected account
       await db.insert(connectedAccount).values({
         id: randomBytes(16).toString("hex"),
@@ -110,6 +124,7 @@ export async function GET(
         refreshTokenEncrypted,
         accessTokenExpiresAt,
         scope: tokens.scope,
+        isDefault: isFirst,
       });
     }
 

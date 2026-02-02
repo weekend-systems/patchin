@@ -12,8 +12,10 @@ export async function GET(request: NextRequest) {
 
   const accounts = await db
     .select({
+      id: connectedAccount.id,
       provider: connectedAccount.provider,
       providerEmail: connectedAccount.providerEmail,
+      isDefault: connectedAccount.isDefault,
       createdAt: connectedAccount.createdAt,
     })
     .from(connectedAccount)

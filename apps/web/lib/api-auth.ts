@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { db, apiKey, connectedAccount } from "@/lib/db";
-import { eq, and } from "drizzle-orm";
+import { eq, and, or, desc } from "drizzle-orm";
 import { hashApiKey, decryptToken, encryptToken } from "@/lib/crypto";
 import { refreshAccessToken, OAuthProvider } from "@/lib/oauth-providers";
 
@@ -51,20 +51,60 @@ export async function validateApiKey(request: NextRequest): Promise<{
 
 export async function getAccessToken(
   userId: string,
-  provider: OAuthProvider
-): Promise<{ token: string } | { error: string }> {
-  const accounts = await db
-    .select()
-    .from(connectedAccount)
-    .where(
-      and(
-        eq(connectedAccount.userId, userId),
-        eq(connectedAccount.provider, provider)
-      )
-    )
-    .limit(1);
+  provider: OAuthProvider,
+  accountHint?: string
+): Promise<{ token: string; accountId: string } | { error: string }> {
+  let account;
 
-  const account = accounts[0];
+  if (accountHint) {
+    // Look up by email or account ID
+    const accounts = await db
+      .select()
+      .from(connectedAccount)
+      .where(
+        and(
+          eq(connectedAccount.userId, userId),
+          eq(connectedAccount.provider, provider),
+          or(
+            eq(connectedAccount.providerEmail, accountHint),
+            eq(connectedAccount.id, accountHint)
+          )
+        )
+      )
+      .limit(1);
+    account = accounts[0];
+  } else {
+    // Look for default account first
+    const defaultAccounts = await db
+      .select()
+      .from(connectedAccount)
+      .where(
+        and(
+          eq(connectedAccount.userId, userId),
+          eq(connectedAccount.provider, provider),
+          eq(connectedAccount.isDefault, true)
+        )
+      )
+      .limit(1);
+
+    if (defaultAccounts.length > 0) {
+      account = defaultAccounts[0];
+    } else {
+      // Fall back to most recently updated
+      const accounts = await db
+        .select()
+        .from(connectedAccount)
+        .where(
+          and(
+            eq(connectedAccount.userId, userId),
+            eq(connectedAccount.provider, provider)
+          )
+        )
+        .orderBy(desc(connectedAccount.updatedAt))
+        .limit(1);
+      account = accounts[0];
+    }
+  }
 
   if (!account) {
     return { error: `No ${provider} account connected` };
@@ -100,7 +140,7 @@ export async function getAccessToken(
         })
         .where(eq(connectedAccount.id, account.id));
 
-      return { token: newTokens.accessToken };
+      return { token: newTokens.accessToken, accountId: account.id };
     } catch (err) {
       console.error("Token refresh failed:", err);
       return { error: "Token refresh failed - please reconnect your account" };
@@ -108,5 +148,5 @@ export async function getAccessToken(
   }
 
   // Return decrypted token
-  return { token: decryptToken(account.accessTokenEncrypted) };
+  return { token: decryptToken(account.accessTokenEncrypted), accountId: account.id };
 }
