@@ -3,6 +3,17 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession, signOut } from "@/lib/auth-client";
+import {
+  SiGoogle,
+  SiGithub,
+  SiSlack,
+  SiNotion,
+  SiLinear,
+  SiYoutube,
+  SiStrava,
+  SiSpotify,
+} from "react-icons/si";
+import { FaMicrosoft } from "react-icons/fa6";
 
 type ConnectedAccount = {
   id: string;
@@ -18,6 +29,18 @@ type ApiKey = {
   keyPrefix: string;
   lastUsedAt: string | null;
   createdAt: string;
+};
+
+const ProviderIcons: Record<string, React.ReactNode> = {
+  google: <SiGoogle className="w-5 h-5 text-[#4285F4]" />,
+  microsoft: <FaMicrosoft className="w-5 h-5 text-[#00A4EF]" />,
+  github: <SiGithub className="w-5 h-5" />,
+  slack: <SiSlack className="w-5 h-5 text-[#4A154B]" />,
+  notion: <SiNotion className="w-5 h-5" />,
+  linear: <SiLinear className="w-5 h-5 text-[#5E6AD2]" />,
+  youtube: <SiYoutube className="w-5 h-5 text-[#FF0000]" />,
+  strava: <SiStrava className="w-5 h-5 text-[#FC4C02]" />,
+  spotify: <SiSpotify className="w-5 h-5 text-[#1DB954]" />,
 };
 
 const PROVIDERS = [
@@ -197,7 +220,8 @@ function DashboardContent() {
                   className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden"
                 >
                   <div className="flex items-center justify-between p-4 bg-zinc-50 dark:bg-zinc-900">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
+                      {ProviderIcons[provider.id]}
                       <h3 className="font-medium text-zinc-900 dark:text-white">
                         {provider.name}
                       </h3>
