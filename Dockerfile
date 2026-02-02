@@ -22,7 +22,7 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN yarn build
+RUN yarn turbo build --filter=@patchin/web
 
 # Production
 FROM base AS runner
