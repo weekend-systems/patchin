@@ -72,21 +72,57 @@ curl -X POST https://patchin.sh/api/auth/device/token \
 # { "status": "completed", "api_key": "pk_live_..." }
 ```
 
-### For CLI Tools
+### Install the CLI
 
 ```bash
-# 1. Authenticate with Patchin
-patchin login
-
-# 2. Connect accounts via web UI (OAuth)
-# -> patchin.sh/connect
-
-# 3. Run local MCP server
-patchin serve
-
-# 4. Point Claude at localhost
-# -> Add to your MCP config
+npm install -g @patchin/cli
 ```
+
+### CLI Usage
+
+```bash
+# Authenticate (opens browser for OAuth)
+patchin login
+# {"status":"awaiting_authorization","verification_url":"https://patchin.sh/setup/..."}
+# ... user completes setup in browser ...
+# {"status":"authenticated"}
+
+# Check status
+patchin status
+# {"authenticated":true,"base_url":"https://patchin.sh"}
+
+# List connected accounts
+patchin accounts
+# {"accounts":[{"provider":"google","providerEmail":"you@gmail.com"}]}
+
+# Make API requests (60-70% fewer tokens than curl!)
+patchin google gmail/v1/users/me/messages
+patchin google calendar/v3/calendars/primary/events -q maxResults=10
+patchin microsoft me/messages -X POST -d '{"subject":"Hello"}'
+```
+
+### Why the CLI?
+
+The CLI is optimized for AI agents. Compare:
+
+| Operation | CLI | curl |
+|-----------|-----|------|
+| List Gmail | `patchin google gmail/v1/users/me/messages` | `curl -H "Authorization: Bearer pk_..." https://patchin.sh/api/v1/google/gmail/v1/users/me/messages` |
+| **Tokens** | **~5** | **~18+** |
+
+That's a 60-70% reduction in tokens for every API call.
+
+### Claude Code Skill
+
+Add the Patchin skill to your Claude Code configuration:
+
+```json
+{
+  "skills": ["https://patchin.sh/skill.md"]
+}
+```
+
+This teaches Claude how to use the Patchin CLI to access your connected services.
 
 ## Device Authorization API
 

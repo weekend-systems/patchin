@@ -158,70 +158,110 @@ export default function Home() {
 
         <div className="divider-plaid mx-8" />
 
-        {/* Agent Integration Section */}
+        {/* CLI Section */}
         <section className="px-8 py-24 max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-4xl font-bold mb-4">
               Built for Agents
             </h2>
             <p className="text-[var(--text-secondary)] max-w-2xl mx-auto">
-              Authenticate directly from your terminal. No browser redirects to handle.
+              A token-efficient CLI designed for AI agents. 60-70% fewer tokens than raw API calls.
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="card-sharp p-6 bg-[var(--bg-tertiary)]">
               <div className="font-mono text-sm space-y-4 text-[var(--text-secondary)]">
                 <div>
-                  <span className="text-[var(--text-muted)]"># Start the auth flow</span>
+                  <span className="text-[var(--text-muted)]"># Install</span>
                 </div>
                 <div>
-                  <span className="text-[var(--accent-sage)]">$</span> curl -X POST https://patchin.sh/api/auth/device
-                </div>
-                <div className="pl-4 text-[var(--text-muted)]">
-                  {`{ "device_code": "dc_...", "verification_url": "..." }`}
+                  <span className="text-[var(--accent-sage)]">$</span> npm install -g @patchin/cli
                 </div>
                 <div className="pt-4">
-                  <span className="text-[var(--text-muted)]"># User opens URL, connects accounts</span>
-                </div>
-                <div className="pt-4">
-                  <span className="text-[var(--text-muted)]"># Poll for completion</span>
+                  <span className="text-[var(--text-muted)]"># Login (user completes in browser)</span>
                 </div>
                 <div>
-                  <span className="text-[var(--accent-sage)]">$</span> curl -X POST https://patchin.sh/api/auth/device/token \
-                </div>
-                <div className="pl-4">
-                  -d {`'{"device_code": "dc_..."}'`}
+                  <span className="text-[var(--accent-sage)]">$</span> patchin login
                 </div>
                 <div className="pl-4 text-[var(--text-muted)]">
-                  {`{ "status": "completed", "api_key": "pk_live_..." }`}
+                  {`{"status":"awaiting_authorization","verification_url":"..."}`}
+                </div>
+                <div className="pl-4 text-[var(--text-muted)]">
+                  {`{"status":"authenticated"}`}
+                </div>
+                <div className="pt-4">
+                  <span className="text-[var(--text-muted)]"># Make API calls</span>
+                </div>
+                <div>
+                  <span className="text-[var(--accent-sage)]">$</span> patchin google gmail/v1/users/me/messages
+                </div>
+                <div>
+                  <span className="text-[var(--accent-sage)]">$</span> patchin microsoft me/calendar/events
+                </div>
+                <div>
+                  <span className="text-[var(--accent-sage)]">$</span> patchin spotify v1/me/playlists
                 </div>
               </div>
             </div>
             <div>
               <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold mb-4">
-                Device Authorization Flow
+                Why a CLI?
               </h3>
-              <ul className="space-y-4 text-[var(--text-secondary)]">
-                <li className="flex items-start gap-3">
-                  <span className="w-6 h-6 flex-shrink-0 bg-[var(--accent-rust)] flex items-center justify-center text-white text-xs font-bold">1</span>
-                  <span>Agent requests a device code from the API</span>
+              <p className="text-[var(--text-secondary)] mb-6">
+                Every token counts when you&apos;re running AI agents. The Patchin CLI is designed to minimize token usage while giving full API access.
+              </p>
+              <div className="card-sharp p-4 mb-6">
+                <div className="text-xs font-[family-name:var(--font-heading)] uppercase tracking-wider text-[var(--text-muted)] mb-3">
+                  Token Comparison
+                </div>
+                <div className="space-y-2 font-mono text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-[var(--text-muted)]">CLI:</span>
+                    <span className="text-[var(--accent-sage)]">~5 tokens</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[var(--text-muted)]">curl:</span>
+                    <span className="text-[var(--accent-rust)]">~18+ tokens</span>
+                  </div>
+                </div>
+              </div>
+              <ul className="space-y-3 text-[var(--text-secondary)]">
+                <li className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-[var(--accent-sage)]" />
+                  All output is JSON for easy parsing
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-6 h-6 flex-shrink-0 bg-[var(--accent-rust)] flex items-center justify-center text-white text-xs font-bold">2</span>
-                  <span>Display the verification URL to the user</span>
+                <li className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-[var(--accent-sage)]" />
+                  Credentials stored securely in ~/.patchin
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-6 h-6 flex-shrink-0 bg-[var(--accent-rust)] flex items-center justify-center text-white text-xs font-bold">3</span>
-                  <span>User signs in and connects their accounts in browser</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-6 h-6 flex-shrink-0 bg-[var(--accent-rust)] flex items-center justify-center text-white text-xs font-bold">4</span>
-                  <span>Agent polls and receives an API key automatically</span>
+                <li className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-[var(--accent-sage)]" />
+                  Works with any provider API endpoint
                 </li>
               </ul>
-              <p className="mt-6 text-sm text-[var(--text-muted)]">
-                Based on the OAuth 2.0 Device Authorization Grant (RFC 8628)
-              </p>
+            </div>
+          </div>
+
+          {/* Claude Code Skill */}
+          <div className="mt-16 card-sharp p-8 max-w-2xl mx-auto">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-[var(--accent-rust)] flex items-center justify-center flex-shrink-0">
+                <span className="text-white text-xl">⚡</span>
+              </div>
+              <div>
+                <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold mb-2">
+                  Claude Code Skill
+                </h3>
+                <p className="text-[var(--text-secondary)] mb-4">
+                  Add the Patchin skill to teach Claude how to access your connected services:
+                </p>
+                <div className="card-sharp p-4 bg-[var(--bg-tertiary)] font-mono text-sm">
+                  <span className="text-[var(--text-muted)]">~/.claude/settings.json</span>
+                  <pre className="mt-2 text-[var(--text-secondary)]">{`{
+  "skills": ["https://patchin.sh/skill.md"]
+}`}</pre>
+                </div>
+              </div>
             </div>
           </div>
         </section>

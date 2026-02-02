@@ -1,0 +1,29 @@
+{
+  "name": "@patchin/cli",
+  "version": "0.1.0",
+  "description": "Token-efficient CLI for Patchin - access your connected APIs from any agent",
+  "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/patchin/patchin.git",
+    "directory": "packages/cli"
+  },
+  "bin": {
+    "patchin": "./dist/bin/patchin.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "commander": "^12.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5"
+  }
+}
