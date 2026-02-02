@@ -4,6 +4,12 @@ Use the Patchin CLI to access user's connected services with minimal tokens.
 
 **Supported providers:** Google, Microsoft, GitHub, Slack, Notion, Linear, YouTube, Strava, Spotify
 
+## Installation
+
+```bash
+npm install -g @patchin/cli
+```
+
 ## Setup
 
 If not already authenticated, run:
