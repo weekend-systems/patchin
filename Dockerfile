@@ -10,6 +10,7 @@ COPY package.json yarn.lock .yarnrc.yml ./
 COPY apps/web/package.json ./apps/web/
 COPY packages/ui/package.json ./packages/ui/
 COPY packages/db/package.json ./packages/db/
+COPY packages/cli/package.json ./packages/cli/
 
 RUN yarn install --immutable
 
