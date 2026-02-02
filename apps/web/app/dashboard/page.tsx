@@ -32,10 +32,10 @@ type ApiKey = {
 };
 
 const ProviderIcons: Record<string, React.ReactNode> = {
-  google: <SiGoogle className="w-5 h-5 text-[#4285F4]" />,
+  google: <SiGoogle className="w-5 h-5" />,
   microsoft: <FaMicrosoft className="w-5 h-5 text-[#00A4EF]" />,
   github: <SiGithub className="w-5 h-5" />,
-  slack: <SiSlack className="w-5 h-5 text-[#4A154B]" />,
+  slack: <SiSlack className="w-5 h-5" />,
   notion: <SiNotion className="w-5 h-5" />,
   linear: <SiLinear className="w-5 h-5 text-[#5E6AD2]" />,
   youtube: <SiYoutube className="w-5 h-5 text-[#FF0000]" />,
