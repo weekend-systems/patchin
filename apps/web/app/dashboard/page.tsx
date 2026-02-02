@@ -23,6 +23,9 @@ type ApiKey = {
 const PROVIDERS = [
   { id: "google", name: "Google", description: "Gmail, Calendar, Drive" },
   { id: "microsoft", name: "Microsoft", description: "Outlook, OneDrive" },
+  { id: "slack", name: "Slack", description: "Messages, channels" },
+  { id: "notion", name: "Notion", description: "Pages, databases" },
+  { id: "linear", name: "Linear", description: "Issues, projects" },
   { id: "spotify", name: "Spotify", description: "Playlists, playback" },
 ];
 
@@ -330,13 +333,18 @@ curl -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "X-Patchin-Account: work@gmail.com" \\
   https://patchin.sh/api/v1/google/gmail/v1/users/me/messages
 
-# Outlook example
+# Slack example
 curl -H "Authorization: Bearer YOUR_API_KEY" \\
-  https://patchin.sh/api/v1/microsoft/v1.0/me/messages
+  https://patchin.sh/api/v1/slack/conversations.list
 
-# Spotify example
+# Notion example
 curl -H "Authorization: Bearer YOUR_API_KEY" \\
-  https://patchin.sh/api/v1/spotify/v1/me/playlists`}</code>
+  https://patchin.sh/api/v1/notion/v1/search
+
+# Linear example (GraphQL)
+curl -X POST -H "Authorization: Bearer YOUR_API_KEY" \\
+  -d '{"query": "{ issues { nodes { title } } }"}' \\
+  https://patchin.sh/api/v1/linear/graphql`}</code>
           </pre>
         </section>
       </div>

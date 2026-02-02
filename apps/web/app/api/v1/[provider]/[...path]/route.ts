@@ -8,6 +8,9 @@ const PROVIDER_BASE_URLS: Record<OAuthProvider, string> = {
   google: "https://www.googleapis.com",
   microsoft: "https://graph.microsoft.com",
   spotify: "https://api.spotify.com",
+  slack: "https://slack.com/api",
+  notion: "https://api.notion.com",
+  linear: "https://api.linear.app",
 };
 
 async function handleRequest(
@@ -52,6 +55,11 @@ async function handleRequest(
   const headers = new Headers();
   headers.set("Authorization", `Bearer ${tokenResult.token}`);
   headers.set("Content-Type", request.headers.get("Content-Type") || "application/json");
+
+  // Provider-specific headers
+  if (provider === "notion") {
+    headers.set("Notion-Version", "2022-06-28");
+  }
 
   // Forward the request
   let response: Response;

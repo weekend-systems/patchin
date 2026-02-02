@@ -192,5 +192,51 @@ async function getProviderUserInfo(
       }
       return { id: data.id, email: data.email };
     }
+    case "slack": {
+      const res = await fetch("https://slack.com/api/users.identity", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const data = await res.json();
+      console.log("Slack userinfo response:", JSON.stringify(data));
+      if (!data.ok || !data.user?.id) {
+        throw new Error(`Slack userinfo failed: ${JSON.stringify(data)}`);
+      }
+      return { id: data.user.id, email: data.user.email };
+    }
+    case "notion": {
+      // Notion returns user info in the token response, but we can also fetch it
+      const res = await fetch("https://api.notion.com/v1/users/me", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Notion-Version": "2022-06-28",
+        },
+      });
+      const data = await res.json();
+      console.log("Notion userinfo response:", JSON.stringify(data));
+      if (!data.id) {
+        throw new Error(`Notion userinfo missing id: ${JSON.stringify(data)}`);
+      }
+      // Notion user objects have person.email for real users
+      const email = data.type === "person" ? data.person?.email : undefined;
+      return { id: data.id, email };
+    }
+    case "linear": {
+      const res = await fetch("https://api.linear.app/graphql", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: "{ viewer { id email } }",
+        }),
+      });
+      const data = await res.json();
+      console.log("Linear userinfo response:", JSON.stringify(data));
+      if (!data.data?.viewer?.id) {
+        throw new Error(`Linear userinfo failed: ${JSON.stringify(data)}`);
+      }
+      return { id: data.data.viewer.id, email: data.data.viewer.email };
+    }
   }
 }
