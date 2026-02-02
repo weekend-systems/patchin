@@ -11,6 +11,9 @@ const PROVIDER_BASE_URLS: Record<OAuthProvider, string> = {
   slack: "https://slack.com/api",
   notion: "https://api.notion.com",
   linear: "https://api.linear.app",
+  github: "https://api.github.com",
+  strava: "https://www.strava.com/api/v3",
+  youtube: "https://www.googleapis.com",
 };
 
 async function handleRequest(
@@ -59,6 +62,10 @@ async function handleRequest(
   // Provider-specific headers
   if (provider === "notion") {
     headers.set("Notion-Version", "2022-06-28");
+  }
+  if (provider === "github") {
+    headers.set("Accept", "application/vnd.github+json");
+    headers.set("X-GitHub-Api-Version", "2022-11-28");
   }
 
   // Forward the request

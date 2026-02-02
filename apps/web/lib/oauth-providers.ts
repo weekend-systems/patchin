@@ -89,6 +89,46 @@ export const oauthProviders = {
     clientId: process.env.LINEAR_CLIENT_ID!,
     clientSecret: process.env.LINEAR_CLIENT_SECRET!,
   },
+  github: {
+    name: "GitHub",
+    authUrl: "https://github.com/login/oauth/authorize",
+    tokenUrl: "https://github.com/login/oauth/access_token",
+    scopes: [
+      "user",
+      "repo",
+      "gist",
+      "read:org",
+      "notifications",
+    ],
+    clientId: process.env.GITHUB_CLIENT_ID!,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+  },
+  strava: {
+    name: "Strava",
+    authUrl: "https://www.strava.com/oauth/authorize",
+    tokenUrl: "https://www.strava.com/oauth/token",
+    scopes: [
+      "read",
+      "read_all",
+      "profile:read_all",
+      "activity:read_all",
+    ],
+    clientId: process.env.STRAVA_CLIENT_ID!,
+    clientSecret: process.env.STRAVA_CLIENT_SECRET!,
+  },
+  youtube: {
+    name: "YouTube",
+    authUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+    tokenUrl: "https://oauth2.googleapis.com/token",
+    scopes: [
+      "openid",
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+    ],
+    clientId: process.env.GOOGLE_CLIENT_ID!, // Reuses Google credentials
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+  },
 } as const;
 
 export type OAuthProvider = keyof typeof oauthProviders;
@@ -182,11 +222,18 @@ export async function exchangeCodeForTokens(
     grant_type: "authorization_code",
   });
 
+  const headers: Record<string, string> = {
+    "Content-Type": "application/x-www-form-urlencoded",
+  };
+
+  // GitHub requires Accept header to get JSON response
+  if (provider === "github") {
+    headers["Accept"] = "application/json";
+  }
+
   const response = await fetch(config.tokenUrl, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
+    headers,
     body: body.toString(),
   });
 
@@ -204,6 +251,16 @@ export async function exchangeCodeForTokens(
       refreshToken: data.authed_user.refresh_token,
       expiresIn: data.authed_user.expires_in || 43200, // 12 hours default
       scope: data.authed_user.scope || "",
+    };
+  }
+
+  // GitHub tokens don't expire
+  if (provider === "github") {
+    return {
+      accessToken: data.access_token,
+      refreshToken: undefined,
+      expiresIn: 365 * 24 * 60 * 60, // No expiration
+      scope: data.scope || "",
     };
   }
 

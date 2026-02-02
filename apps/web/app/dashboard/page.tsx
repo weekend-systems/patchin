@@ -23,9 +23,12 @@ type ApiKey = {
 const PROVIDERS = [
   { id: "google", name: "Google", description: "Gmail, Calendar, Drive" },
   { id: "microsoft", name: "Microsoft", description: "Outlook, OneDrive" },
+  { id: "github", name: "GitHub", description: "Repos, issues, PRs" },
   { id: "slack", name: "Slack", description: "Messages, channels" },
   { id: "notion", name: "Notion", description: "Pages, databases" },
   { id: "linear", name: "Linear", description: "Issues, projects" },
+  { id: "youtube", name: "YouTube", description: "Playlists, subscriptions" },
+  { id: "strava", name: "Strava", description: "Activities, stats" },
   { id: "spotify", name: "Spotify", description: "Playlists, playback" },
 ];
 
@@ -328,23 +331,17 @@ function DashboardContent() {
 curl -H "Authorization: Bearer YOUR_API_KEY" \\
   https://patchin.sh/api/v1/google/gmail/v1/users/me/messages
 
-# Use a specific account by email
+# GitHub repos
 curl -H "Authorization: Bearer YOUR_API_KEY" \\
-  -H "X-Patchin-Account: work@gmail.com" \\
-  https://patchin.sh/api/v1/google/gmail/v1/users/me/messages
+  https://patchin.sh/api/v1/github/user/repos
 
-# Slack example
+# Strava activities
 curl -H "Authorization: Bearer YOUR_API_KEY" \\
-  https://patchin.sh/api/v1/slack/conversations.list
+  https://patchin.sh/api/v1/strava/athlete/activities
 
-# Notion example
+# YouTube playlists
 curl -H "Authorization: Bearer YOUR_API_KEY" \\
-  https://patchin.sh/api/v1/notion/v1/search
-
-# Linear example (GraphQL)
-curl -X POST -H "Authorization: Bearer YOUR_API_KEY" \\
-  -d '{"query": "{ issues { nodes { title } } }"}' \\
-  https://patchin.sh/api/v1/linear/graphql`}</code>
+  "https://patchin.sh/api/v1/youtube/youtube/v3/playlists?mine=true"`}</code>
           </pre>
         </section>
       </div>

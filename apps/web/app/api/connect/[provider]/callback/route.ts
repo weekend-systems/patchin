@@ -238,5 +238,43 @@ async function getProviderUserInfo(
       }
       return { id: data.data.viewer.id, email: data.data.viewer.email };
     }
+    case "github": {
+      const res = await fetch("https://api.github.com/user", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "application/vnd.github+json",
+        },
+      });
+      const data = await res.json();
+      console.log("GitHub userinfo response:", JSON.stringify(data));
+      if (!data.id) {
+        throw new Error(`GitHub userinfo missing id: ${JSON.stringify(data)}`);
+      }
+      return { id: String(data.id), email: data.email };
+    }
+    case "strava": {
+      const res = await fetch("https://www.strava.com/api/v3/athlete", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const data = await res.json();
+      console.log("Strava userinfo response:", JSON.stringify(data));
+      if (!data.id) {
+        throw new Error(`Strava userinfo missing id: ${JSON.stringify(data)}`);
+      }
+      return { id: String(data.id), email: data.email };
+    }
+    case "youtube": {
+      // YouTube uses Google OAuth, so we get user info from Google
+      const res = await fetch(
+        "https://www.googleapis.com/oauth2/v2/userinfo",
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      const data = await res.json();
+      console.log("YouTube userinfo response:", JSON.stringify(data));
+      if (!data.id) {
+        throw new Error(`YouTube userinfo missing id: ${JSON.stringify(data)}`);
+      }
+      return { id: data.id, email: data.email };
+    }
   }
 }
