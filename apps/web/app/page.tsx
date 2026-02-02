@@ -158,6 +158,73 @@ export default function Home() {
 
         <div className="divider-plaid mx-8" />
 
+        {/* Agent Integration Section */}
+        <section className="px-8 py-24 max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-4xl font-bold mb-4">
+              Built for Agents
+            </h2>
+            <p className="text-[var(--text-secondary)] max-w-2xl mx-auto">
+              Authenticate directly from your terminal. No browser redirects to handle.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="card-sharp p-6 bg-[var(--bg-tertiary)]">
+              <div className="font-mono text-sm space-y-4 text-[var(--text-secondary)]">
+                <div>
+                  <span className="text-[var(--text-muted)]"># Start the auth flow</span>
+                </div>
+                <div>
+                  <span className="text-[var(--accent-sage)]">$</span> curl -X POST patchin.sh/api/auth/device
+                </div>
+                <div className="pl-4 text-[var(--text-muted)]">
+                  {`{ "device_code": "dc_...", "verification_url": "..." }`}
+                </div>
+                <div className="pt-4">
+                  <span className="text-[var(--text-muted)]"># User opens URL, connects accounts</span>
+                </div>
+                <div className="pt-4">
+                  <span className="text-[var(--text-muted)]"># Poll for completion</span>
+                </div>
+                <div>
+                  <span className="text-[var(--accent-sage)]">$</span> curl -X POST patchin.sh/api/auth/device/token
+                </div>
+                <div className="pl-4 text-[var(--text-muted)]">
+                  {`{ "status": "completed", "api_key": "pk_live_..." }`}
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold mb-4">
+                Device Authorization Flow
+              </h3>
+              <ul className="space-y-4 text-[var(--text-secondary)]">
+                <li className="flex items-start gap-3">
+                  <span className="w-6 h-6 flex-shrink-0 bg-[var(--accent-rust)] flex items-center justify-center text-white text-xs font-bold">1</span>
+                  <span>Agent requests a device code from the API</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-6 h-6 flex-shrink-0 bg-[var(--accent-rust)] flex items-center justify-center text-white text-xs font-bold">2</span>
+                  <span>Display the verification URL to the user</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-6 h-6 flex-shrink-0 bg-[var(--accent-rust)] flex items-center justify-center text-white text-xs font-bold">3</span>
+                  <span>User signs in and connects their accounts in browser</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-6 h-6 flex-shrink-0 bg-[var(--accent-rust)] flex items-center justify-center text-white text-xs font-bold">4</span>
+                  <span>Agent polls and receives an API key automatically</span>
+                </li>
+              </ul>
+              <p className="mt-6 text-sm text-[var(--text-muted)]">
+                Based on the OAuth 2.0 Device Authorization Grant (RFC 8628)
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <div className="divider-plaid mx-8" />
+
         {/* Security Badge Section */}
         <section className="px-8 py-24 max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-[var(--accent-rust)] mb-6" style={{ clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' }}>

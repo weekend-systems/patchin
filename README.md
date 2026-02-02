@@ -42,6 +42,38 @@ We handle the auth. You get your data in every agent, instantly.
 
 ## User Flow
 
+### For Agents (Device Authorization Flow)
+
+The recommended way to authenticate agents and CLI tools:
+
+```bash
+# Agent initiates the flow
+curl -X POST https://patchin.sh/api/auth/device
+
+# Response:
+# {
+#   "device_code": "dc_Ej8kL2mN...",
+#   "verification_url": "https://patchin.sh/setup/dc_Ej8kL2mN...",
+#   "expires_in": 900,
+#   "interval": 5
+# }
+
+# User opens the verification_url in browser:
+# 1. Signs up or logs in
+# 2. Connects their accounts (Google, Microsoft, etc.)
+# 3. Clicks "Complete Setup"
+
+# Agent polls for completion
+curl -X POST https://patchin.sh/api/auth/device/token \
+  -H "Content-Type: application/json" \
+  -d '{"device_code": "dc_Ej8kL2mN..."}'
+
+# Once complete, response includes:
+# { "status": "completed", "api_key": "pk_live_..." }
+```
+
+### For CLI Tools
+
 ```bash
 # 1. Authenticate with Patchin
 patchin login
@@ -55,6 +87,20 @@ patchin serve
 # 4. Point Claude at localhost
 # -> Add to your MCP config
 ```
+
+## Device Authorization API
+
+For agents and tools that need to authenticate users without handling browser redirects:
+
+| Endpoint | Method | Auth | Description |
+|----------|--------|------|-------------|
+| `/api/auth/device` | POST | None | Initiate device flow, get device code |
+| `/api/auth/device/status` | GET | None | Check if code is valid/expired |
+| `/api/auth/device/token` | POST | None | Poll for API key (after user completes) |
+| `/api/auth/device/claim` | POST | Session | Associate device with user |
+| `/api/auth/device/complete` | POST | Session | Complete setup, generate API key |
+
+The flow follows the [OAuth 2.0 Device Authorization Grant](https://datatracker.ietf.org/doc/html/rfc8628) pattern.
 
 ## Why Open Source?
 
