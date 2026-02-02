@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "@/lib/auth-client";
 import { Suspense } from "react";
+import { useSession } from "@/lib/auth-client";
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
+  const { data: session, isPending } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -39,6 +41,20 @@ function LoginForm() {
   }
 
   const signupHref = redirect ? `/signup?redirect=${encodeURIComponent(redirect)}` : "/signup";
+
+  useEffect(() => {
+    if (!isPending && session) {
+      router.replace(redirect || "/dashboard");
+    }
+  }, [session, isPending, router, redirect]);
+
+  if (isPending || session) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
+        <p className="text-zinc-500">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black p-8">
