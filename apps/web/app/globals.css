@@ -1,37 +1,44 @@
 @import "@patchin/ui/globals.css";
 
 @theme inline {
-  --font-heading: var(--font-heading);
   --font-body: var(--font-body);
 }
 
 :root {
-  /* Light mode colors */
-  --bg-primary: #faf9f6;
+  /* Light mode colors - Linear-inspired clean */
+  --bg-primary: #fafafa;
   --bg-secondary: #ffffff;
   --bg-card: #ffffff;
-  --text-primary: #1a1a1a;
-  --text-secondary: rgba(26, 26, 26, 0.7);
-  --text-muted: rgba(26, 26, 26, 0.5);
-  --border-color: rgba(26, 26, 26, 0.1);
+  --text-primary: #0f0f10;
+  --text-secondary: rgba(15, 15, 16, 0.64);
+  --text-muted: rgba(15, 15, 16, 0.48);
+  --border-color: rgba(0, 0, 0, 0.08);
+
+  /* Western accent colors */
   --accent-rust: #c4705a;
   --accent-rust-dark: #a85d4a;
   --accent-sage: #7a8b6e;
   --accent-sand: #d4c4b0;
   --accent-gold: #d4a853;
-  --plaid-opacity: 0.03;
+
+  --plaid-opacity: 0.02;
+
+  /* Transitions */
+  --transition-fast: 100ms ease-out;
+  --transition-normal: 150ms ease-out;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-primary: #0f1115;
-    --bg-secondary: #1a1d23;
-    --bg-card: #1a1d23;
-    --text-primary: #faf9f6;
-    --text-secondary: rgba(250, 249, 246, 0.7);
-    --text-muted: rgba(250, 249, 246, 0.5);
-    --border-color: rgba(250, 249, 246, 0.1);
-    --plaid-opacity: 0.08;
+    /* Dark mode - Linear-inspired near-black */
+    --bg-primary: #0a0a0b;
+    --bg-secondary: #111113;
+    --bg-card: #161618;
+    --text-primary: #ededef;
+    --text-secondary: rgba(237, 237, 239, 0.64);
+    --text-muted: rgba(237, 237, 239, 0.48);
+    --border-color: rgba(255, 255, 255, 0.06);
+    --plaid-opacity: 0.04;
   }
 }
 
@@ -39,16 +46,19 @@ body {
   font-family: var(--font-body), system-ui, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading), system-ui, sans-serif;
+  letter-spacing: -0.01em;
 }
 
-/* Plaid background pattern */
+/* Plaid background pattern - reduced opacity */
 .plaid-bg {
   background-color: var(--bg-primary);
-  background-image: 
+  background-image:
     repeating-linear-gradient(
       90deg,
       transparent,
@@ -73,108 +83,96 @@ h1, h2, h3, h4, h5, h6 {
     );
 }
 
-/* Sharp card style */
+/* Linear-style card - minimal, hairline border */
+.card-linear {
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  border-radius: 6px;
+  transition: border-color var(--transition-normal);
+}
+
+.card-linear:hover {
+  border-color: rgba(196, 112, 90, 0.3);
+}
+
+/* Legacy card-sharp - now more subtle */
 .card-sharp {
   border: 1px solid var(--border-color);
   background: var(--bg-card);
-  box-shadow: 4px 4px 0px 0px rgba(26, 26, 26, 0.05);
-  transition: all 0.2s ease;
-}
-
-@media (prefers-color-scheme: dark) {
-  .card-sharp {
-    box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.3);
-  }
+  border-radius: 6px;
+  transition: border-color var(--transition-normal);
 }
 
 .card-sharp:hover {
-  box-shadow: 6px 6px 0px 0px rgba(196, 112, 90, 0.2);
-  transform: translate(-2px, -2px);
+  border-color: rgba(196, 112, 90, 0.3);
 }
 
-@media (prefers-color-scheme: dark) {
-  .card-sharp:hover {
-    box-shadow: 6px 6px 0px 0px rgba(196, 112, 90, 0.3);
-  }
-}
-
-/* Button styles */
+/* Button styles - compact, no shadows */
 .btn-primary {
-  background-color: var(--text-primary);
-  color: var(--bg-secondary);
-  font-family: var(--font-heading);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  font-size: 0.875rem;
-  padding: 1rem 2rem;
-  border: 2px solid var(--text-primary);
-  box-shadow: 4px 4px 0px 0px var(--accent-rust);
-  transition: all 0.2s ease;
+  background-color: var(--accent-rust);
+  color: white;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 0.5rem 1rem;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background-color var(--transition-fast);
 }
 
 .btn-primary:hover {
-  background-color: var(--accent-rust);
-  border-color: var(--accent-rust);
-  box-shadow: 6px 6px 0px 0px var(--text-primary);
-  transform: translate(-2px, -2px);
+  background-color: var(--accent-rust-dark);
 }
 
 .btn-secondary {
   background-color: transparent;
   color: var(--text-primary);
-  font-family: var(--font-heading);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  font-size: 0.875rem;
-  padding: 1rem 2rem;
-  border: 2px solid var(--text-primary);
-  box-shadow: 4px 4px 0px 0px var(--accent-sand);
-  transition: all 0.2s ease;
-}
-
-@media (prefers-color-scheme: dark) {
-  .btn-secondary {
-    box-shadow: 4px 4px 0px 0px rgba(212, 196, 176, 0.3);
-  }
+  font-weight: 500;
+  font-size: 13px;
+  padding: 0.5rem 1rem;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .btn-secondary:hover {
-  background-color: var(--accent-sand);
-  box-shadow: 6px 6px 0px 0px var(--text-primary);
-  transform: translate(-2px, -2px);
+  background-color: var(--bg-secondary);
+  border-color: rgba(0, 0, 0, 0.12);
 }
 
 @media (prefers-color-scheme: dark) {
   .btn-secondary:hover {
-    background-color: rgba(212, 196, 176, 0.2);
+    background-color: var(--bg-secondary);
+    border-color: rgba(255, 255, 255, 0.1);
   }
 }
 
-/* Sheriff badge/star element */
+/* Sheriff badge - smaller, more subtle */
 .sheriff-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
   background: var(--accent-gold);
   clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
 }
 
-/* Section divider with plaid accent */
-.divider-plaid {
-  height: 2px;
-  background: repeating-linear-gradient(
-    90deg,
-    var(--accent-rust),
-    var(--accent-rust) 20px,
-    var(--accent-sage) 20px,
-    var(--accent-sage) 40px,
-    var(--accent-sand) 40px,
-    var(--accent-sand) 60px
-  );
+.sheriff-badge-lg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Subtle divider */
+.divider-subtle {
+  height: 1px;
+  background: var(--border-color);
 }
 
 /* Service icons - light/dark mode support */
@@ -199,4 +197,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .service-icon-slack {
   background-color: #4a154b;
+}
+
+/* Typography utilities */
+.text-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
