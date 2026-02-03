@@ -48,7 +48,7 @@ export default function GitHubInstallPage() {
   }
 
   function handleInstall() {
-    window.location.href = "https://github.com/apps/Patchin.sh/installations/new";
+    window.location.href = "https://github.com/apps/patchin-sh/installations/new";
   }
 
   function handleContinue() {
