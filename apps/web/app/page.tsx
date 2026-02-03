@@ -12,13 +12,13 @@ export default function Home() {
           </span>
         </div>
         <div className="flex items-center gap-6">
-          <Link 
-            href="/login" 
+          <Link
+            href="/login"
             className="font-[family-name:var(--font-heading)] text-sm font-medium uppercase tracking-wider hover:text-[var(--accent-rust)] transition-colors"
           >
             Sign In
           </Link>
-          <Link 
+          <Link
             href="/signup"
             className="font-[family-name:var(--font-heading)] text-sm font-medium uppercase tracking-wider px-4 py-2 border-2 border-[var(--text-primary)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-secondary)] transition-colors"
           >
@@ -35,15 +35,15 @@ export default function Home() {
               <div className="inline-flex items-center gap-2 px-3 py-1 border border-[var(--accent-rust)]/30 mb-6">
                 <div className="sheriff-badge w-3 h-3" />
                 <span className="font-[family-name:var(--font-heading)] text-xs font-medium uppercase tracking-wider text-[var(--accent-rust)]">
-                  Now in Open Beta
+                  Plaid for your data
                 </span>
               </div>
               <h1 className="font-[family-name:var(--font-heading)] text-5xl md:text-6xl font-bold leading-[1.1] tracking-tight mb-6">
-                Your data,{" "}
-                <span className="text-[var(--accent-rust)]">everywhere</span>
+                One connection.{" "}
+                <span className="text-[var(--accent-rust)]">All your data.</span>
               </h1>
               <p className="text-xl text-[var(--text-secondary)] mb-8 leading-relaxed max-w-lg">
-                Connect all your accounts once. Give any AI agent instant access to your data — from Google Drive to Notion to Slack.
+                Your AI agent needs access to Gmail, Slack, Notion, Linear, and a dozen other tools. Setting up each one is painful. Patchin lets you connect once and use everywhere.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/signup" className="btn-primary text-center">
@@ -101,12 +101,12 @@ export default function Home() {
                 </div>
                 <div className="pt-4 border-t border-[var(--border-color)]">
                   <div className="text-xs font-[family-name:var(--font-heading)] uppercase tracking-wider text-[var(--text-muted)] mb-2">
-                    Available to agents via MCP
+                    Works with your favorite AI agents
                   </div>
                   <div className="flex gap-2">
                     <span className="px-2 py-1 bg-[var(--accent-rust)]/10 text-[var(--accent-rust)] text-xs font-medium">Claude</span>
                     <span className="px-2 py-1 bg-[var(--accent-sage)]/10 text-[var(--accent-sage)] text-xs font-medium">Cursor</span>
-                    <span className="px-2 py-1 bg-[var(--accent-gold)]/10 text-[var(--accent-gold)] text-xs font-medium">+ more</span>
+                    <span className="px-2 py-1 bg-[var(--accent-gold)]/10 text-[var(--accent-gold)] text-xs font-medium">ChatGPT</span>
                   </div>
                 </div>
               </div>
@@ -126,7 +126,7 @@ export default function Home() {
               How It Works
             </h2>
             <p className="text-[var(--text-secondary)] max-w-2xl mx-auto">
-              Three simple steps to connect your entire digital workspace
+              You connect your accounts. Your AI agent does the rest.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -135,10 +135,10 @@ export default function Home() {
                 1
               </div>
               <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold mb-3">
-                Connect Once
+                Connect Your Accounts
               </h3>
               <p className="text-[var(--text-secondary)] leading-relaxed">
-                OAuth all your accounts through Patchin. Google, Notion, Slack, Linear — all in one place.
+                Sign in with Google, Notion, Slack, Linear — whatever you use. One place for all your logins.
               </p>
             </div>
             <div className="card-sharp p-8">
@@ -146,10 +146,10 @@ export default function Home() {
                 2
               </div>
               <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold mb-3">
-                Use Anywhere
+                Tell Your Agent
               </h3>
               <p className="text-[var(--text-secondary)] leading-relaxed">
-                Any agent, any machine, same access. Your credentials follow you, securely.
+                Point your AI agent to Patchin. It handles the technical setup automatically.
               </p>
             </div>
             <div className="card-sharp p-8">
@@ -157,10 +157,10 @@ export default function Home() {
                 3
               </div>
               <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold mb-3">
-                Full Coverage
+                It Just Works
               </h3>
               <p className="text-[var(--text-secondary)] leading-relaxed">
-                If it has an API, we can make it an MCP. Your entire digital life, available to any agent.
+                Your agent can now read your emails, check your calendar, search your docs — whatever you need.
               </p>
             </div>
           </div>
@@ -168,93 +168,69 @@ export default function Home() {
 
         <div className="divider-plaid mx-8" />
 
-        {/* CLI Section */}
+        {/* Agent Section */}
         <section className="px-8 py-24 max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-4xl font-bold mb-4">
-              Built for Agents
+              Your Agent Does the Work
             </h2>
             <p className="text-[var(--text-secondary)] max-w-2xl mx-auto">
-              A token-efficient CLI designed for AI agents. 60-70% fewer tokens than raw API calls.
+              You don&apos;t need to be technical. Your AI agent handles the setup and knows how to use Patchin automatically.
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="card-sharp p-6 bg-[var(--bg-tertiary)]">
-              <div className="font-mono text-sm space-y-4 text-[var(--text-secondary)]">
-                <div>
-                  <span className="text-[var(--text-muted)]"># Install (no dependencies required)</span>
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-[var(--accent-rust)]/10 flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-[var(--accent-rust)] text-sm font-bold">You</span>
+                  </div>
+                  <div className="flex-1 p-3 border border-[var(--border-color)] bg-[var(--bg-secondary)]">
+                    <p className="text-sm text-[var(--text-secondary)]">
+                      &ldquo;Check my calendar for tomorrow and summarize any emails from my boss&rdquo;
+                    </p>
+                  </div>
                 </div>
-                <div className="break-all">
-                  <span className="text-[var(--accent-sage)]">$</span> curl -fsSL https://patchin.sh/install.sh | bash
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-[var(--accent-sage)]/10 flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-[var(--accent-sage)] text-sm font-bold">AI</span>
+                  </div>
+                  <div className="flex-1 p-3 border border-[var(--border-color)] bg-[var(--bg-secondary)]">
+                    <p className="text-sm text-[var(--text-secondary)]">
+                      &ldquo;You have 3 meetings tomorrow. I found 2 emails from Sarah — she&apos;s asking about the Q3 report deadline...&rdquo;
+                    </p>
+                  </div>
                 </div>
-                <div className="pt-2 text-xs text-[var(--text-muted)]">
-                  # or with npm: npm install -g @patchin/cli
-                </div>
-                <div className="pt-4">
-                  <span className="text-[var(--text-muted)]"># Login (user completes in browser)</span>
-                </div>
-                <div>
-                  <span className="text-[var(--accent-sage)]">$</span> patchin login
-                </div>
-                <div className="pl-4 text-[var(--text-muted)]">
-                  {`{"status":"awaiting_authorization","verification_url":"..."}`}
-                </div>
-                <div className="pl-4 text-[var(--text-muted)]">
-                  {`{"status":"authenticated"}`}
-                </div>
-                <div className="pt-4">
-                  <span className="text-[var(--text-muted)]"># Make API calls</span>
-                </div>
-                <div>
-                  <span className="text-[var(--accent-sage)]">$</span> patchin google gmail/v1/users/me/messages
-                </div>
-                <div>
-                  <span className="text-[var(--accent-sage)]">$</span> patchin microsoft me/calendar/events
-                </div>
-                <div>
-                  <span className="text-[var(--accent-sage)]">$</span> patchin spotify v1/me/playlists
+                <div className="pt-4 border-t border-[var(--border-color)] text-center">
+                  <p className="text-xs text-[var(--text-muted)]">
+                    Behind the scenes, your agent uses Patchin to access Google Calendar and Gmail
+                  </p>
                 </div>
               </div>
             </div>
             <div>
               <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold mb-4">
-                Why a CLI?
+                No Technical Skills Required
               </h3>
               <p className="text-[var(--text-secondary)] mb-6">
-                Every token counts when you&apos;re running AI agents. The Patchin CLI is designed to minimize token usage while giving full API access.
+                Normally, connecting your AI agent to your data means dealing with OAuth flows, API keys, and configuration files. Patchin handles all of that for you.
               </p>
-              <div className="card-sharp p-4 mb-6">
-                <div className="text-xs font-[family-name:var(--font-heading)] uppercase tracking-wider text-[var(--text-muted)] mb-3">
-                  Token Comparison
-                </div>
-                <div className="space-y-2 font-mono text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-[var(--text-muted)]">CLI:</span>
-                    <span className="text-[var(--accent-sage)]">~5 tokens</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[var(--text-muted)]">curl:</span>
-                    <span className="text-[var(--accent-rust)]">~18+ tokens</span>
-                  </div>
-                </div>
-              </div>
-              <ul className="space-y-3 text-[var(--text-secondary)]">
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 bg-[var(--accent-sage)]" />
-                  All output is JSON for easy parsing
+              <ul className="space-y-4 text-[var(--text-secondary)]">
+                <li className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 bg-[var(--accent-sage)] mt-2 flex-shrink-0" />
+                  <span><strong className="text-[var(--text-primary)]">You</strong> connect your accounts through a simple web interface</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 bg-[var(--accent-sage)]" />
-                  Credentials stored securely in ~/.patchin
+                <li className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 bg-[var(--accent-sage)] mt-2 flex-shrink-0" />
+                  <span><strong className="text-[var(--text-primary)]">Your agent</strong> handles the technical bits automatically</span>
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 bg-[var(--accent-sage)]" />
-                  Works with any provider API endpoint
+                <li className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 bg-[var(--accent-sage)] mt-2 flex-shrink-0" />
+                  <span><strong className="text-[var(--text-primary)]">Everything</strong> stays secure — we never see your data, just the login handshake</span>
                 </li>
               </ul>
             </div>
           </div>
-
         </section>
 
         <div className="divider-plaid mx-8" />
@@ -265,14 +241,14 @@ export default function Home() {
             <span className="text-white text-2xl">★</span>
           </div>
           <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-4xl font-bold mb-6">
-            Security First
+            Your Data Stays Yours
           </h2>
           <p className="text-lg text-[var(--text-secondary)] mb-8 max-w-2xl mx-auto leading-relaxed">
-            We&apos;re a token broker, not a proxy. Your API calls go direct to Google, Notion, and others. We never see your data — just the auth handshake. Open source and auditable.
+            Patchin only handles the login — we never see your emails, files, or messages. Your data flows directly between your agent and your services. Open source, so you can verify it yourself.
           </p>
           <div className="flex flex-wrap justify-center gap-4 text-sm">
             <span className="px-4 py-2 border border-[var(--border-color)] font-[family-name:var(--font-heading)] uppercase tracking-wider">
-              End-to-End Encrypted
+              We Never See Your Data
             </span>
             <span className="px-4 py-2 border border-[var(--border-color)] font-[family-name:var(--font-heading)] uppercase tracking-wider">
               Open Source
@@ -360,10 +336,10 @@ export default function Home() {
         <section className="px-8 py-24 bg-[var(--text-primary)] text-[var(--bg-primary)]">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-4xl font-bold mb-6">
-              Ready to Connect Everything?
+              Stop Setting Up Integrations
             </h2>
             <p className="text-lg text-[var(--bg-primary)]/70 mb-8 max-w-xl mx-auto">
-              Join the open beta and start using your data with any AI agent today.
+              Connect your accounts once. Let your AI agent handle the rest.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link 

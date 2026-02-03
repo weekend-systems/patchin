@@ -14,8 +14,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Patchin - Plaid for MCPs",
-  description: "One login. All your data. Every agent.",
+  title: "Patchin - Connect your data to any AI agent",
+  description: "One connection. All your data. Every AI agent. Stop setting up integrations one by one.",
 };
 
 export default function RootLayout({

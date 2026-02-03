@@ -1,22 +1,24 @@
 # Patchin
 
-**Plaid for MCPs.** One login. All your data. Every agent.
+**Plaid for your data.** Connect once. Use everywhere. Every AI agent.
 
 ## The Problem
 
-Setting up MCPs is painful. Every new agent, every new machine — you're back to wrangling OAuth credentials, configuring tokens, debugging auth flows. Multiply that by every service you use (Google, Notion, Slack, Linear...) and it's a mess.
+AI agents are powerful — but connecting them to your data is still painful.
 
-You can access all your data via APIs. But making that data available to AI agents? That's still way too hard.
+Want your agent to read your emails, check your calendar, or search your Notion? That means setting up OAuth credentials, configuring API tokens, and debugging auth flows. For every service. On every machine. For every agent.
+
+If you use 10 services, that's 10 different setups. And when something breaks? Good luck.
 
 ## The Solution
 
-Patchin centralizes authentication and gives you MCP access to everything in one place.
+Patchin is a unified authentication layer for AI agents. Connect your accounts once, and any agent can access your data.
 
-1. **Connect once** — OAuth all your accounts through Patchin
+1. **Connect once** — Sign in to Google, Slack, Notion, Linear, and more through Patchin
 2. **Use anywhere** — Any agent, any machine, same access
-3. **Full coverage** — If it has an API, we can make it an MCP
+3. **Full coverage** — If it has an API, we can connect it
 
-We handle the auth. You get your data in every agent, instantly.
+Patchin handles the OAuth complexity. Your agent gets instant access to your data.
 
 ## Architecture
 
@@ -31,10 +33,10 @@ We handle the auth. You get your data in every agent, instantly.
          │ tokens                 │ direct API calls
          ▼                        │
 ┌─────────────────────────────────┴──┐
-│  patchin CLI / local MCP server    │
+│  patchin CLI                       │
 │  - runs on user's machine          │
 │  - fetches tokens from patchin.sh  │
-│  - serves MCP to Claude            │
+│  - called by AI agents             │
 └────────────────────────────────────┘
 ```
 
@@ -112,17 +114,15 @@ The CLI is optimized for AI agents. Compare:
 
 That's a 60-70% reduction in tokens for every API call.
 
-### Claude Code Skill
+### AI Agent Setup
 
-Add the Patchin skill to your Claude Code configuration:
+Point your AI agent to the Patchin skill file:
 
-```json
-{
-  "skills": ["https://patchin.sh/skill.md"]
-}
+```
+https://patchin.sh/skill.md
 ```
 
-This teaches Claude how to use the Patchin CLI to access your connected services.
+This teaches your agent how to use the Patchin CLI to access your connected services. Works with Claude Code, Cursor, and other AI agents that support skills or custom instructions.
 
 ## Device Authorization API
 
@@ -154,7 +154,7 @@ Most people won't self-host (and that's fine — use the hosted version). But th
 
 ## Why This Will Matter
 
-Right now it's developers with Claude Code hitting this pain. Soon it's everyone using AI agents.
+Right now it's early adopters hitting this pain. Soon it's everyone using AI agents.
 
 Your data lives in dozens of services. Agents need access to that data to be useful. Patchin is the bridge — one login, and your entire digital life is available to any agent you use.
 
