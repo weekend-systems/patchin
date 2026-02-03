@@ -5,11 +5,11 @@
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/weekend-systems/patchin.git",
+    "url": "git+https://github.com/weekend-systems/patchin.git",
     "directory": "packages/cli"
   },
   "bin": {
-    "patchin": "./dist/bin/patchin.js"
+    "patchin": "dist/bin/patchin.js"
   },
   "files": [
     "dist"
