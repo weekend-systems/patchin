@@ -1,31 +1,17 @@
 FROM node:20-alpine AS base
 RUN corepack enable && corepack prepare yarn@4.12.0 --activate
 
-# Install dependencies
-FROM base AS deps
+# Build
+FROM base AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json yarn.lock .yarnrc.yml ./
-COPY apps/web/package.json ./apps/web/
-COPY packages/ui/package.json ./packages/ui/
-COPY packages/db/package.json ./packages/db/
-COPY packages/cli/package.json ./packages/cli/
+COPY apps/ ./apps/
+COPY packages/ ./packages/
+COPY scripts/ ./scripts/
 
 RUN yarn install --immutable
-
-# Build
-FROM base AS builder
-WORKDIR /app
-
-# Copy all node_modules (root + workspaces) to preserve yarn workspace symlinks
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
-COPY --from=deps /app/packages/ui/node_modules ./packages/ui/node_modules
-COPY --from=deps /app/packages/db/node_modules ./packages/db/node_modules
-COPY --from=deps /app/packages/cli/node_modules ./packages/cli/node_modules
-
-COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
@@ -49,8 +35,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/
 # Migration files and deps
 COPY --from=builder /app/packages/db/drizzle ./packages/db/drizzle
 COPY --from=builder /app/scripts ./scripts
-COPY --from=deps /app/node_modules/drizzle-orm ./node_modules/drizzle-orm
-COPY --from=deps /app/node_modules/postgres ./node_modules/postgres
+COPY --from=builder /app/node_modules/drizzle-orm ./node_modules/drizzle-orm
+COPY --from=builder /app/node_modules/postgres ./node_modules/postgres
 
 USER nextjs
 
