@@ -97,10 +97,25 @@ patchin status
 patchin accounts
 # {"accounts":[{"provider":"google","providerEmail":"you@gmail.com"}]}
 
-# Make API requests (60-70% fewer tokens than curl!)
-patchin google gmail/v1/users/me/messages
-patchin google calendar/v3/calendars/primary/events -q maxResults=10
-patchin microsoft me/messages -X POST -d '{"subject":"Hello"}'
+# Built-in tools (quick actions). `patchin tools` returns JSON with full catalog.
+patchin tools
+patchin google email list --max-results 10
+patchin google calendar list --max-results 5 --single-events
+patchin google drive search --q "name contains 'report'"
+patchin microsoft email list --top 10
+patchin microsoft calendar create --subject "Sync" --start 2025-01-01T10:00:00Z --end 2025-01-01T10:30:00Z
+patchin slack message send --channel C123456 --text "Hello"
+patchin notion search --query "meeting notes"
+patchin linear issues list --limit 5
+patchin github issues list --owner org --repo project --state open
+patchin spotify playlist create --name "Focus" --no-public
+patchin youtube search --q "coding tutorial" --max-results 5
+patchin strava activities list --per-page 10
+
+# Raw URL requests (explicit URL or path)
+patchin url https://patchin.sh/api/v1/google/gmail/v1/users/me/messages
+patchin url /api/v1/google/calendar/v3/calendars/primary/events -q maxResults=10
+patchin url /api/v1/microsoft/me/messages -X POST -d '{"subject":"Hello"}'
 ```
 
 ### Why the CLI?
@@ -109,7 +124,7 @@ The CLI is optimized for AI agents. Compare:
 
 | Operation | CLI | curl |
 |-----------|-----|------|
-| List Gmail | `patchin google gmail/v1/users/me/messages` | `curl -H "Authorization: Bearer pk_..." https://patchin.sh/api/v1/google/gmail/v1/users/me/messages` |
+| List Gmail | `patchin url /api/v1/google/gmail/v1/users/me/messages` | `curl -H "Authorization: Bearer pk_..." https://patchin.sh/api/v1/google/gmail/v1/users/me/messages` |
 | **Tokens** | **~5** | **~18+** |
 
 That's a 60-70% reduction in tokens for every API call.

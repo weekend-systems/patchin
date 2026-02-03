@@ -3,10 +3,10 @@ import { login } from "./commands/login.js";
 import { logout } from "./commands/logout.js";
 import { status } from "./commands/status.js";
 import { accounts } from "./commands/accounts.js";
-import { request, RequestOptions } from "./commands/request.js";
+import { requestUrl } from "./http.js";
 import { invalidArgs } from "./errors.js";
-
-const PROVIDERS = ["google", "microsoft", "spotify"];
+import { collectOption } from "./utils/cli.js";
+import { registerToolCommands } from "./tools/cli.js";
 
 export function run(): void {
   const program = new Command();
@@ -14,7 +14,9 @@ export function run(): void {
   program
     .name("patchin")
     .description("Token-efficient CLI for Patchin API access")
-    .version("0.1.0");
+    .version("0.1.0")
+    .showHelpAfterError()
+    .showSuggestionAfterError();
 
   program
     .command("login")
@@ -44,10 +46,10 @@ export function run(): void {
       await accounts();
     });
 
-  // Provider request command - handles <provider> <path> pattern
   program
-    .argument("[provider]", "Provider name (google, microsoft, spotify)")
-    .argument("[path]", "API path")
+    .command("url")
+    .description("Make a request to an explicit URL")
+    .argument("<url>", "Full URL or path (relative to base URL)")
     .option("-X, --method <method>", "HTTP method", "GET")
     .option("-d, --data <data>", "Request body (JSON)")
     .option(
@@ -65,8 +67,7 @@ export function run(): void {
     .option("-r, --raw", "Raw response output", false)
     .action(
       async (
-        provider: string | undefined,
-        path: string | undefined,
+        url: string,
         options: {
           method: string;
           data?: string;
@@ -75,45 +76,34 @@ export function run(): void {
           raw: boolean;
         }
       ) => {
-        // If no provider specified, show help
-        if (!provider) {
-          program.help();
-          return;
-        }
-
-        // Check if it's a known subcommand that wasn't matched
-        if (["login", "logout", "status", "accounts"].includes(provider)) {
-          // Already handled by subcommands
-          return;
-        }
-
-        // Validate provider
-        if (!PROVIDERS.includes(provider)) {
-          invalidArgs(
-            `Unknown provider: ${provider}. Valid providers: ${PROVIDERS.join(", ")}`
-          );
-        }
-
-        // Path is required for provider requests
-        if (!path) {
-          invalidArgs("API path is required");
-        }
-
-        const requestOptions: RequestOptions = {
+        const headers = parseHeaders(options.header);
+        await requestUrl(url, {
           method: options.method.toUpperCase(),
           data: options.data,
           query: options.query,
-          headers: options.header,
+          headers,
           raw: options.raw,
-        };
-
-        await request(provider, path, requestOptions);
+        });
       }
     );
 
+  registerToolCommands(program);
+
+  if (process.argv.length <= 2) {
+    program.help();
+  }
   program.parse(process.argv);
 }
 
-function collectOption(value: string, previous: string[]): string[] {
-  return previous.concat([value]);
+function parseHeaders(headers: string[]): Record<string, string> {
+  const parsed: Record<string, string> = {};
+  for (const header of headers) {
+    const [key, ...valueParts] = header.split(":");
+    const value = valueParts.join(":").trim();
+    if (!key || !value) {
+      invalidArgs(`Invalid header format: ${header}`);
+    }
+    parsed[key] = value;
+  }
+  return parsed;
 }

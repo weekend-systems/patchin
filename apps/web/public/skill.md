@@ -2,7 +2,7 @@
 
 Use the Patchin CLI to access user's connected services with minimal tokens.
 
-**Supported providers:** Google, Microsoft, GitHub, Slack, Notion, Linear, YouTube, Strava, Spotify
+**Supported providers (raw URL mode):** Google, Microsoft, GitHub, Slack, Notion, Linear, YouTube, Strava, Spotify
 
 ## Installation
 
@@ -38,165 +38,191 @@ patchin accounts
 
 Returns: `{"accounts":[{"id":"abc123","provider":"google","providerEmail":"user@gmail.com","isDefault":true},...]}`
 
-### Make API Requests
+### Built-in Tools
+
+List the built-in tools:
 
 ```bash
-patchin <provider> <path> [options]
+patchin tools
 ```
 
-**Providers:** `google`, `microsoft`, `github`, `slack`, `notion`, `linear`, `youtube`, `strava`, `spotify`
+Use built-in tools for common actions (the list below is a subset):
+
+```bash
+patchin google email list --max-results 10
+patchin google email send --to you@example.com --subject "Hello" --body "Hi there"
+patchin google calendar list --max-results 5 --single-events
+patchin google drive search --q "name contains 'report'"
+patchin microsoft email list --top 10
+patchin microsoft calendar create --subject "Sync" --start 2025-01-01T10:00:00Z --end 2025-01-01T10:30:00Z
+patchin slack message send --channel C123456 --text "Hello"
+patchin notion search --query "meeting notes"
+patchin linear issues list --limit 5
+patchin github issues list --owner org --repo project --state open
+patchin spotify playlist create --name "Focus" --no-public
+patchin spotify playlist add --playlist PLAYLIST_ID --uris spotify:track:abc,spotify:track:def
+patchin youtube search --q "coding tutorial" --max-results 5
+patchin strava activities list --per-page 10
+```
+
+### Raw URL Requests
+
+```bash
+patchin url <url> [options]
+```
+
+`<url>` can be a full URL or a path relative to the base URL (e.g. `/api/v1/google/...`).
 
 **Options:**
 - `-X, --method <method>` - HTTP method (default: GET)
 - `-d, --data <json>` - Request body
 - `-q, --query <key=value>` - Query parameter (repeatable)
 - `-H, --header <key: value>` - Custom header (repeatable)
-- `-a, --account <email|id>` - Use specific account (for multi-account)
 - `-r, --raw` - Raw output (no JSON formatting)
 
 ## Examples
 
-### Google
+### Google (Raw URL Examples)
 
 ```bash
 # Gmail - list messages
-patchin google gmail/v1/users/me/messages
+patchin url /api/v1/google/gmail/v1/users/me/messages
 
 # Gmail - get specific message
-patchin google gmail/v1/users/me/messages/MESSAGE_ID
+patchin url /api/v1/google/gmail/v1/users/me/messages/MESSAGE_ID
 
 # Gmail - send email
-patchin google gmail/v1/users/me/messages/send -X POST -d '{"raw":"BASE64_EMAIL"}'
+patchin url /api/v1/google/gmail/v1/users/me/messages/send -X POST -d '{"raw":"BASE64_EMAIL"}'
 
 # Calendar - list events
-patchin google calendar/v3/calendars/primary/events
+patchin url /api/v1/google/calendar/v3/calendars/primary/events
 
 # Calendar - list events with query params
-patchin google calendar/v3/calendars/primary/events -q maxResults=10 -q timeMin=2024-01-01T00:00:00Z
+patchin url /api/v1/google/calendar/v3/calendars/primary/events -q maxResults=10 -q timeMin=2024-01-01T00:00:00Z
 
 # Drive - list files
-patchin google drive/v3/files
+patchin url /api/v1/google/drive/v3/files
 
 # Drive - search files
-patchin google drive/v3/files -q "q=name contains 'report'"
+patchin url /api/v1/google/drive/v3/files -q "q=name contains 'report'"
 ```
 
-### Microsoft
+### Microsoft (Raw URL Examples)
 
 ```bash
 # Outlook - list messages
-patchin microsoft me/messages
+patchin url /api/v1/microsoft/me/messages
 
 # Outlook - get specific message
-patchin microsoft me/messages/MESSAGE_ID
+patchin url /api/v1/microsoft/me/messages/MESSAGE_ID
 
 # Calendar - list events
-patchin microsoft me/calendar/events
+patchin url /api/v1/microsoft/me/calendar/events
 
 # OneDrive - list files
-patchin microsoft me/drive/root/children
+patchin url /api/v1/microsoft/me/drive/root/children
 
 # User profile
-patchin microsoft me
+patchin url /api/v1/microsoft/me
 ```
 
-### Spotify
+### Spotify (Raw URL Examples)
 
 ```bash
 # Current user profile
-patchin spotify v1/me
+patchin url /api/v1/spotify/v1/me
 
 # User's playlists
-patchin spotify v1/me/playlists
+patchin url /api/v1/spotify/v1/me/playlists
 
 # Currently playing
-patchin spotify v1/me/player/currently-playing
+patchin url /api/v1/spotify/v1/me/player/currently-playing
 
 # Search
-patchin spotify v1/search -q "q=artist:radiohead" -q type=track
+patchin url /api/v1/spotify/v1/search -q "q=artist:radiohead" -q type=track
 ```
 
-### GitHub
+### GitHub (Raw URL Examples)
 
 ```bash
 # List user's repos
-patchin github user/repos
+patchin url /api/v1/github/user/repos
 
 # Get repo details
-patchin github repos/OWNER/REPO
+patchin url /api/v1/github/repos/OWNER/REPO
 
 # List issues
-patchin github repos/OWNER/REPO/issues
+patchin url /api/v1/github/repos/OWNER/REPO/issues
 
 # Create issue
-patchin github repos/OWNER/REPO/issues -X POST -d '{"title":"Bug","body":"Description"}'
+patchin url /api/v1/github/repos/OWNER/REPO/issues -X POST -d '{"title":"Bug","body":"Description"}'
 
 # List PRs
-patchin github repos/OWNER/REPO/pulls
+patchin url /api/v1/github/repos/OWNER/REPO/pulls
 
 # Get notifications
-patchin github notifications
+patchin url /api/v1/github/notifications
 ```
 
-### Slack
+### Slack (Raw URL Examples)
 
 ```bash
 # List channels
-patchin slack conversations.list
+patchin url /api/v1/slack/conversations.list
 
 # Get channel history
-patchin slack conversations.history -q channel=CHANNEL_ID
+patchin url /api/v1/slack/conversations.history -q channel=CHANNEL_ID
 
 # Send message
-patchin slack chat.postMessage -X POST -d '{"channel":"CHANNEL_ID","text":"Hello"}'
+patchin url /api/v1/slack/chat.postMessage -X POST -d '{"channel":"CHANNEL_ID","text":"Hello"}'
 
 # List users
-patchin slack users.list
+patchin url /api/v1/slack/users.list
 ```
 
-### Notion
+### Notion (Raw URL Examples)
 
 ```bash
 # Search pages
-patchin notion v1/search -X POST -d '{"query":"meeting notes"}'
+patchin url /api/v1/notion/v1/search -X POST -d '{"query":"meeting notes"}'
 
 # Get page
-patchin notion v1/pages/PAGE_ID
+patchin url /api/v1/notion/v1/pages/PAGE_ID
 
 # Get database
-patchin notion v1/databases/DATABASE_ID
+patchin url /api/v1/notion/v1/databases/DATABASE_ID
 
 # Query database
-patchin notion v1/databases/DATABASE_ID/query -X POST -d '{}'
+patchin url /api/v1/notion/v1/databases/DATABASE_ID/query -X POST -d '{}'
 
 # Get block children
-patchin notion v1/blocks/BLOCK_ID/children
+patchin url /api/v1/notion/v1/blocks/BLOCK_ID/children
 ```
 
-### Linear
+### Linear (Raw URL Examples)
 
 ```bash
 # GraphQL API - list issues
-patchin linear graphql -X POST -d '{"query":"{ issues { nodes { id title state { name } } } }"}'
+patchin url /api/v1/linear/graphql -X POST -d '{"query":"{ issues { nodes { id title state { name } } } }"}'
 
 # Get viewer info
-patchin linear graphql -X POST -d '{"query":"{ viewer { id email } }"}'
+patchin url /api/v1/linear/graphql -X POST -d '{"query":"{ viewer { id email } }"}'
 
 # Create issue
-patchin linear graphql -X POST -d '{"query":"mutation { issueCreate(input: {teamId: \"TEAM_ID\", title: \"Bug\"}) { issue { id } } }"}'
+patchin url /api/v1/linear/graphql -X POST -d '{"query":"mutation { issueCreate(input: {teamId: \"TEAM_ID\", title: \"Bug\"}) { issue { id } } }"}'
 ```
 
-### YouTube
+### YouTube (Raw URL Examples)
 
 ```bash
 # List user's playlists
-patchin youtube youtube/v3/playlists -q mine=true -q part=snippet
+patchin url /api/v1/youtube/youtube/v3/playlists -q mine=true -q part=snippet
 
 # List subscriptions
-patchin youtube youtube/v3/subscriptions -q mine=true -q part=snippet
+patchin url /api/v1/youtube/youtube/v3/subscriptions -q mine=true -q part=snippet
 
 # Search videos
-patchin youtube youtube/v3/search -q part=snippet -q "q=coding tutorial"
+patchin url /api/v1/youtube/youtube/v3/search -q part=snippet -q "q=coding tutorial"
 ```
 
 ### Strava
